@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+    crossorigin="anonymous"
+    />
+    <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    crossorigin="anonymous"
+    />
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbar"
+        >
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbar">
+        <div class="navbar-nav" style="text-align: right">
+            <a class="nav-item nav-link" id="home" href="main.html">RealTime</a> 
+            <a class="nav-item nav-link" id="pms" href="trendAnalysis.html">Trend Analysis</a>
+        </div>
+        </div>
+    <div>     <!--Real time time-->
+        <body>
+            <p style="color:whitesmoke" id="cTime"></p>
+            <script>
+            setInterval(setClock,1000)
+            function setClock(){
+                const currentDate = new Date()
+                document.getElementById("cTime").innerHTML = currentDate
+            }
+            </script>
+        </body>
+    </div>
+    </nav>
+    <title>realTime Maintenance</title>
+    <!-- eel.js , this is necessary  -->
+    <script type="text/javascript" src="/eel.js"></script>
+
+</head>
+
+<body>
+    {% block content %}
+    {% endblock %}
+</body>
+
+</html>
+
+<style>
+p{color: rgb(0, 88, 146);}
+</style>

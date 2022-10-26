@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .chartBox {
+        width: 80%;
+    }
+</style>
+<h1>Hello World </h1>
+
+<p id="return"></p>     <!-- 將返回的值 設定在這個<p>內  -->
+<p id="return2"></p> 
+
+<div class="chartBox">
+    <canvas id="myChart"></canvas>
+</div>
+<script type="text/javascript" src="../js/main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
