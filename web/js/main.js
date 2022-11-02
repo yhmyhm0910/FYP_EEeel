@@ -14,9 +14,185 @@ function js_bigger(count){
     document.querySelector('p').style.fontSize = count ;
 }
 
-let normalData, actualData, PMID, myChart //globalize
+let normalData, actualData, PMID, myChart, myChart_A, myChart_B //globalize
 
-async function RTupDate_chart(){
+async function RTupDate_chart_2(){    //for double charts
+
+    var labels = new Array(34) 
+    labels[0] = 0;
+    labels[1] = 0.06;
+    labels[2] = 0.1,
+    labels[3] = 0.15;
+    labels[4] = 0.2;
+    labels[5] = 0.25;
+    labels[6] = 0.3;
+    labels[7] = 0.35;
+    labels[8] = 0.4;
+    labels[9] = 0.45;
+    labels[10] = 0.8;
+    labels[11] = 1.0;
+    labels[12] = 1.5;
+    labels[13] = 2.1;
+    labels[14] = 2.4;
+    labels[15] = 4.2;
+    labels[16] = 4.4;
+    labels[17] = 4.6;
+    labels[18] = 4.8;
+    labels[19] = 5.0;
+    labels[20] = 5.2;
+    labels[21] = 5.4;
+    labels[22] = 5.6;
+    labels[23] = 5.8;
+    labels[24] = 6.0;
+    labels[25] = 6.2;
+    labels[26] = 6.4;
+    labels[27] = 7.0;
+    labels[28] = 8.0;
+    labels[29] = 9.0;
+    labels[30] = 10.0;
+    labels[31] = 11.9;
+    labels[32] = 12.0;
+    labels[33] = 12.1;
+
+    let normalData = await eel.normalCurrent()();
+    let actualData_A = await eel.actualCurrent_A()();
+    let actualData_B = await eel.actualCurrent()();
+
+    let PMID_A = await eel.PMID_A()();
+    let PMID_B = await eel.PMID()();
+    PMID = PMID_B;
+
+    var title_A =  PMID_A + ' - ' + await eel.RDate_A()() + ' - ' + await eel.RTime_A()();
+    var title_B =  PMID_B + ' - ' + await eel.RDate()() + ' - ' + await eel.RTime()();
+
+    var opNormalData = new Array(34)
+    for (let i = 0; i < opNormalData.length ; i++) {
+        opNormalData[i] = {"x": labels[i], "y": normalData[i]}
+    }
+
+    var opActualData_A = new Array(34)
+    for (let i = 0; i < opActualData_A.length ; i++) {
+        opActualData_A[i] = {"x": labels[i], "y": actualData_A[i]}
+    }
+
+    var opActualData_B = new Array(34)
+    for (let i = 0; i < opActualData_B.length ; i++) {
+        opActualData_B[i] = {"x": labels[i], "y": actualData_B[i]}
+    }
+
+    var data_A = {
+    datasets: [{
+        display: true,
+        label: 'Actual Current',
+        backgroundColor: 'rgb(0, 0, 255)',
+        borderColor: 'rgb(0, 0, 255)',
+        data: opActualData_A,
+        showLine: true
+        },
+        {
+        display: true,
+        label: 'Normal Current',
+        backgroundColor: 'rgb(0, 0, 0)',
+        borderColor: 'rgb(0, 0, 0)',
+        data: opNormalData,
+        showLine: true
+    }
+    ]
+    };   
+
+    var data_B = {
+        datasets: [{
+            display: true,
+            label: 'Actual Current',
+            backgroundColor: 'rgb(0, 0, 255)',
+            borderColor: 'rgb(0, 0, 255)',
+            data: opActualData_B,
+            showLine: true
+            },
+            {
+            display: true,
+            label: 'Normal Current',
+            backgroundColor: 'rgb(0, 0, 0)',
+            borderColor: 'rgb(0, 0, 0)',
+            data: opNormalData,
+            showLine: true
+        }
+        ]
+        };
+
+    const config_A = {
+    type: 'scatter',
+    data: data_A,
+    options: {
+        plugins: {
+            title: {
+                display: true,
+                text: title_A,
+                font: {size: 30}
+            }
+        },
+        scales: {
+        xAxes: {
+            display: true,
+            title: {
+            display: true,
+            text: 'Time (s)'
+            },
+            suggestedMin: 0,
+        },
+        yAxes: {
+            display: true,
+            title:{
+            display: true,
+            text: 'Current (A)'
+            }            
+        }
+        }
+    }
+    };
+
+    const config_B = {
+        type: 'scatter',
+        data: data_B,
+        options: {
+            plugins: {
+                title: {
+                    display: true,
+                    text: title_B,
+                    font: {size: 30}
+                }
+            },
+            scales: {
+            xAxes: {
+                display: true,
+                title: {
+                display: true,
+                text: 'Time (s)'
+                },
+                suggestedMin: 0,
+            },
+            yAxes: {
+                display: true,
+                title:{
+                display: true,
+                text: 'Current (A)'
+                }            
+            }
+            }
+        }
+        };    
+
+    myChart_A = new Chart(
+    document.getElementById("myChart_A"),
+    config_A
+    );
+    myChart_B = new Chart(
+    document.getElementById("myChart_B"),
+    config_B
+    );
+};
+
+async function RTupDate_chart(){    //Single graph
 
     var labels = new Array(34) 
     labels[0] = 0;
@@ -127,30 +303,53 @@ async function RTupDate_chart(){
     );
 };
 
+let myInterval
+function setInterval_f(){
+    myInterval = setInterval(changeChart,3000);
+}
+
+setInterval_f();
 let ini = 0;
-setInterval(changeChart,3000);
 async function changeChart(){
     if (ini == 0){      //Run RTupDate_chart for 1st time
         RTupDate_chart();
         ini = 1;
     };
+
     if (JSON.stringify(PMID) != JSON.stringify(latestPMID)){  //after JSON.stingify they will be the same
-        PMID = await eel.PMID()();
-        myChart.destroy();
-        RTupDate_chart();
-        PMID = latestPMID;
+        PMID = await eel.PMID()();  //for sync
+
+        PMID = latestPMID;  //for sync
+        if (latestPMID.includes('A')) {     //if two graphs
+            console.log('Found A');
+            clearInterval(myInterval);
+            waitingB = setInterval(waitB, 1000);
+                function waitB(){
+                console.log('Waiting B');
+                if (latestPMID.includes('B')){
+                    //window.setInterval(changeChart, 3000);
+                    clearInterval(waitingB);
+                    setInterval_f();
+                    if (myChart != undefined){
+                        myChart.destroy();}
+                    if (myChart_A != undefined){
+                        myChart_A.destroy();}
+                    if (myChart_B != undefined){
+                        myChart_B.destroy();}
+                    RTupDate_chart_2();
+                }}
+            
+        } else  {
+            if (myChart != undefined){
+                myChart.destroy();}
+            if (myChart_A != undefined){
+                myChart_A.destroy();}
+            if (myChart_B != undefined){
+                myChart_B.destroy();}
+            RTupDate_chart();
+        }  //if one graph
     };
 console.log(PMID);    //for testing
 console.log(latestPMID);        //for testing
 }
 
-async function chooseGraph(){
-    var PMID = await eel.PMID()();
-    console.log(PMID);
-    if (PMID.includes('A') || PMID.includes('B')) {
-        console.log("The word Example is in the string.");
-    } else {
-        console.log("The word Example is not in the string");
-    }
-}
-chooseGraph()

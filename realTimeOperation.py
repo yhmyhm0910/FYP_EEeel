@@ -36,59 +36,75 @@ def normalCurrent():
 
 @eel.expose 
 def actualCurrent():
-    storedResult = [0] * 34
     cursor.execute("SELECT TOP 1 Data1, Data2, Data3, Data4, Data5, Data6, Data7, Data8, Data9, Data10,Data11, Data12, Data13, Data14, Data15, Data16, Data17, Data18, Data19, Data20, Data21, Data22, Data23, Data24,Data25, Data26, Data27, Data28, Data29, Data30, Data31, Data32, Data33, Data34 FROM Records ORDER BY (str(RDate) + str(RTime)) DESC;")
     initialResult = str(cursor.fetchall())
     finalResult = ['0'] * 34
     finalResult = re.findall('\d*\.?\d+',initialResult)
     for i in range(len(finalResult)):
         finalResult[i] = float(finalResult[i])
-    if storedResult!=finalResult:
-        storedResult = finalResult
-        return storedResult
+        return finalResult
 
+@eel.expose
+def actualCurrent_A():  #When passed TWO PMs, select the current of A
+    cursor.execute("SELECT TOP 1 Data1, Data2, Data3, Data4, Data5, Data6, Data7, Data8, Data9, Data10,Data11, Data12, Data13, Data14, Data15, Data16, Data17, Data18, Data19, Data20, Data21, Data22, Data23, Data24,Data25, Data26, Data27, Data28, Data29, Data30, Data31, Data32, Data33, Data34 FROM Records WHERE PMID LIKE '%A' ORDER BY (str(RDate) + str(RTime)) DESC;")
+    initialResult = str(cursor.fetchall())
+    finalResult = ['0'] * 34
+    finalResult = re.findall('\d*\.?\d+',initialResult)
+    for i in range(len(finalResult)):
+        finalResult[i] = float(finalResult[i])
+        return finalResult
 
 @eel.expose
 def RTime():
-    storedRTime = [0] 
     cursor.execute("SELECT TOP 1 RTime FROM Records ORDER BY (str(RDate) + str(RTime)) DESC;")
     initialRTime = str(cursor.fetchall())
     finalRTime = [0]
     finalRTime = re.findall(r'\d+',initialRTime)
-    if storedRTime[0] != finalRTime[0]:
-        storedRTime[0] = finalRTime[0]
-        return str(storedRTime[0])
+    return str(finalRTime[0])
 
-
+@eel.expose
+def RTime_A():  #When passed TWO PMs, select the RTime of A
+    cursor.execute("SELECT TOP 1 RTime FROM Records WHERE PMID LIKE '%A' ORDER BY (str(RDate) + str(RTime)) DESC;")
+    initialRTime = str(cursor.fetchall())
+    finalRTime = [0]
+    finalRTime = re.findall(r'\d+',initialRTime)
+    return str(finalRTime[0])
 
 @eel.expose
 def RDate():
-
-    storedRDate = [0] 
     cursor.execute("SELECT TOP 1 RDate FROM Records ORDER BY (str(RDate) + str(RTime)) DESC;")
     initialRDate = str(cursor.fetchall())
     finalRDate = [0]
     finalRDate = re.findall(r'\d+',initialRDate)
-    if storedRDate[0] != finalRDate[0]:
-        storedRDate[0] = finalRDate[0]
-        return str(storedRDate[0])
+    return str(finalRDate[0])
 
+@eel.expose
+def RDate_A():    #When passed TWO PMs, select the RDate of A
+    cursor.execute("SELECT TOP 1 RDate FROM Records WHERE PMID LIKE '%A' ORDER BY (str(RDate) + str(RTime)) DESC;")
+    initialRDate = str(cursor.fetchall())
+    finalRDate = [0]
+    finalRDate = re.findall(r'\d+',initialRDate)
+    return str(finalRDate[0])
 
 @eel.expose
 def PMID():
-    storedPMID = [0] 
     cursor.execute("SELECT TOP 1 PMID FROM Records ORDER BY (str(RDate) + str(RTime)) DESC;")
     initialPMID = str(cursor.fetchall())
     finalPMID = [0]
     finalPMID = re.findall("[a-zA-Z0-9]+",initialPMID)
-    if storedPMID[0] != finalPMID[0]:
-        storedPMID[0] = finalPMID[0]
-        if (("A" in storedPMID[0]) | ("B" in storedPMID[0])):
-            print ("contain")    #To BE ACTION
-        return str(storedPMID[0])
+    if (("A" in finalPMID[0]) | ("B" in finalPMID[0])):
+        print ("contain")    #To BE ACTION
+    return str(finalPMID[0])
 
-
-
+@eel.expose
+def PMID_A():     #When passed TWO PMs, select the PMID of A
+    cursor.execute("SELECT TOP 1 PMID FROM Records WHERE PMID LIKE '%A' ORDER BY (str(RDate) + str(RTime)) DESC;")
+    initialPMID = str(cursor.fetchall())
+    finalPMID = [0]
+    finalPMID = re.findall("[a-zA-Z0-9]+",initialPMID)
+    if (("A" in finalPMID[0]) | ("B" in finalPMID[0])):
+        print ("contain")    #To BE ACTION
+    return str(finalPMID[0])
 
 eel.init('web')
 eel.start('templates/main.html', jinja_templates='templates',   #https://stackoverflow.com/questions/66410660/how-to-use-jinja2-template-in-eel-python
