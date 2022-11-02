@@ -14,7 +14,7 @@ function js_bigger(count){
     document.querySelector('p').style.fontSize = count ;
 }
 
-let normalData, actualData, PMID //globalize
+let normalData, actualData, PMID, myChart //globalize
 
 async function RTupDate_chart(){
 
@@ -121,24 +121,28 @@ async function RTupDate_chart(){
     }
     };
 
-    let myChart = new Chart(
+    myChart = new Chart(
     document.getElementById("myChart"),
     config
     );
-    
-    setInterval(changeChart,1000);
-    function changeChart(){
-        if (JSON.stringify(PMID) != JSON.stringify(latestPMID)){  //after JSON.stingify they will be the same
+};
+
+let ini = 0;
+setInterval(changeChart,3000);
+async function changeChart(){
+    if (ini == 0){      //Run RTupDate_chart for 1st time
+        RTupDate_chart();
+        ini = 1;
+    };
+    if (JSON.stringify(PMID) != JSON.stringify(latestPMID)){  //after JSON.stingify they will be the same
+        PMID = await eel.PMID()();
         myChart.destroy();
         RTupDate_chart();
-        }
-    console.log(PMID);    //for testing
-    console.log(latestPMID);        //for testing
-    }
+        PMID = latestPMID;
     };
-
-
-RTupDate_chart();
+console.log(PMID);    //for testing
+console.log(latestPMID);        //for testing
+}
 
 async function chooseGraph(){
     var PMID = await eel.PMID()();
