@@ -42,7 +42,7 @@ def actualCurrent():
     finalResult = re.findall('\d*\.?\d+',initialResult)
     for i in range(len(finalResult)):
         finalResult[i] = float(finalResult[i])
-        return finalResult
+    return finalResult
 
 @eel.expose
 def actualCurrent_A():  #When passed TWO PMs, select the current of A
@@ -52,7 +52,8 @@ def actualCurrent_A():  #When passed TWO PMs, select the current of A
     finalResult = re.findall('\d*\.?\d+',initialResult)
     for i in range(len(finalResult)):
         finalResult[i] = float(finalResult[i])
-        return finalResult
+    return finalResult
+
 
 @eel.expose
 def RTime():
@@ -105,6 +106,126 @@ def PMID_A():     #When passed TWO PMs, select the PMID of A
     if (("A" in finalPMID[0]) | ("B" in finalPMID[0])):
         print ("contain")    #To BE ACTION
     return str(finalPMID[0])
+
+@eel.expose
+def diagnosticUnit():       # return 3 = ALARM; return 2 = ALERT; return 1 = NORMAL
+    
+    def fetchMaxCurrent():
+        cursor.execute("SELECT TOP 1 Data2, Data3 FROM Records ORDER BY (str(RDate) + str(RTime)) DESC;")
+        initialMaxCurrent = str(cursor.fetchall())
+        finalMaxCurrent = ['0'] * 2
+        finalMaxCurrent = re.findall('\d*\.?\d+',initialMaxCurrent)
+        for i in range(len(finalMaxCurrent)):
+            finalMaxCurrent[i] = float(finalMaxCurrent[i])
+        if (finalMaxCurrent[0] >= 12) | (finalMaxCurrent[1] >= 12) :
+            if (finalMaxCurrent[0] >= 16) | (finalMaxCurrent[1] >= 16) :
+                return 3
+            else: return 2
+        else: return 1
+    
+    def fetchMaxCurrent_A():
+        cursor.execute("SELECT TOP 1 Data2, Data3 FROM Records WHERE PMID LIKE '%A' ORDER BY (str(RDate) + str(RTime)) DESC;")
+        initialMaxCurrent = str(cursor.fetchall())
+        finalMaxCurrent = ['0'] * 2
+        finalMaxCurrent = re.findall('\d*\.?\d+',initialMaxCurrent)
+        for i in range(len(finalMaxCurrent)):
+            finalMaxCurrent[i] = float(finalMaxCurrent[i])
+        if (finalMaxCurrent[0] >= 12) | (finalMaxCurrent[1] >= 12) :
+            if (finalMaxCurrent[0] >= 16) | (finalMaxCurrent[1] >= 16) :
+                return 3
+            else: return 2
+        else: return 1
+
+    def fetchSteadyCurrent():
+        cursor.execute("SELECT TOP 1 Data11, Data12, Data13, Data14, Data15 FROM Records ORDER BY (str(RDate) + str(RTime)) DESC;") 
+        initialSteadyCurrent = str(cursor.fetchall())
+        finalSteadyCurrent = ['0'] * 5
+        finalSteadyCurrent = re.findall('\d*\.?\d+',initialSteadyCurrent)
+        for i in range(len(finalSteadyCurrent)):
+            finalSteadyCurrent[i] = float(finalSteadyCurrent[i])
+
+        statusEach = [0] * 5    
+        for i in range(len(finalSteadyCurrent)):    #rank status of every point
+            if finalSteadyCurrent[i] >= 6:
+                statusEach[i] = 3
+            if finalSteadyCurrent[i] <3:
+                statusEach[i] = 1
+            if statusEach[i] == 0:
+                statusEach[i] = 2
+        
+        finalStatus = statusEach[0]
+        for i in range(len(statusEach)-1):    #choose max status
+            if statusEach[i+1] > statusEach[i]:
+                finalStatus = statusEach[i+1]
+
+        return finalStatus
+
+    def fetchSteadyCurrent_A():
+        cursor.execute("SELECT TOP 1 Data11, Data12, Data13, Data14, Data15 FROM Records WHERE PMID LIKE '%A' ORDER BY (str(RDate) + str(RTime)) DESC;")  
+        initialSteadyCurrent = str(cursor.fetchall())
+        finalSteadyCurrent = ['0'] * 5
+        finalSteadyCurrent = re.findall('\d*\.?\d+',initialSteadyCurrent)
+        for i in range(len(finalSteadyCurrent)):
+            finalSteadyCurrent[i] = float(finalSteadyCurrent[i])
+
+        statusEach = [0] * 5    
+        for i in range(len(finalSteadyCurrent)):    #rank status of every point
+            if finalSteadyCurrent[i] >= 6:
+                statusEach[i] = 3
+            if finalSteadyCurrent[i] <3:
+                statusEach[i] = 1
+            if statusEach[i] == 0:
+                statusEach[i] = 2
+        
+        finalStatus = statusEach[0]
+        for i in range(len(statusEach)-1):    #choose max status
+            if statusEach[i+1] > statusEach[i]:
+                finalStatus = statusEach[i+1]
+
+        return finalStatus
+
+    def fetchTime():    # Data27: t=7s, Data28: t=8s, Data31: t=10s
+        cursor.execute("SELECT TOP 1 Data28, Data31 FROM Records ORDER BY (str(RDate) + str(RTime)) DESC;")  
+        initialTime = str(cursor.fetchall())
+        finalTime = ['0'] * 2
+        finalTime = re.findall('\d*\.?\d+',initialTime)
+        for i in range(len(finalTime)):
+            finalTime[i] = float(finalTime[i])
+        timeStatus = 1
+        if finalTime[1] != 0:
+           timeStatus = 3
+        else: 
+            if finalTime[0] != 0:
+                timeStatus = 2
+        return timeStatus
+
+    def fetchTime_A():    # Data27: t=7s, Data28: t=8s, Data31: t=10s
+        cursor.execute("SELECT TOP 1 Data28, Data31 FROM Records WHERE PMID LIKE '%A' ORDER BY (str(RDate) + str(RTime)) DESC;")  
+        initialTime = str(cursor.fetchall())
+        finalTime = ['0'] * 2
+        finalTime = re.findall('\d*\.?\d+',initialTime)
+        for i in range(len(finalTime)):
+            finalTime[i] = float(finalTime[i])
+        timeStatus = 1
+        if finalTime[1] != 0:
+            timeStatus = 3
+        else: 
+            if finalTime[0] != 0:
+                timeStatus = 2
+        return timeStatus    
+
+    opStatus = [0] * 6
+    opStatus[0] = fetchMaxCurrent()
+    opStatus[1] = fetchMaxCurrent_A()
+    opStatus[2] = fetchSteadyCurrent()
+    opStatus[3] = fetchSteadyCurrent_A()
+    opStatus[4] = fetchTime()
+    opStatus[5] = fetchTime_A()
+    #opStatus = [Max(B), MaxA, Steady(B), SteadyA, Time(B), TimeA]
+    
+    return opStatus
+
+print(diagnosticUnit())
 
 eel.init('web')
 eel.start('templates/main.html', jinja_templates='templates',   #https://stackoverflow.com/questions/66410660/how-to-use-jinja2-template-in-eel-python

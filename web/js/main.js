@@ -14,7 +14,7 @@ function js_bigger(count){
     document.querySelector('p').style.fontSize = count ;
 }
 
-let normalData, actualData, PMID, myChart, myChart_A, myChart_B //globalize
+let normalData, actualData, PMID, myChart, myChart_A, myChart_B, currentPMStatus, currentPMStatus_A //globalize
 
 async function RTupDate_chart_2(){    //for double charts
 
@@ -346,6 +346,61 @@ async function changeChart(){
                 myChart_A.destroy();}
             if (myChart_B != undefined){
                 myChart_B.destroy();}
+
+            currentPMStatus = await eel.diagnosticUnit()();
+
+            for (let i = 0; i < currentPMStatus.length ; i++) {
+                if (currentPMStatus[i] == 3){
+                    switch (i){
+                        case 0:
+                            latestOperationA.style.color = "red";
+                            document.getElementById("latestOperationA").innerHTML = "Alarm [" + PMID + " - MaxA exceeds]"; 
+                            break;
+                        case 2:
+                            latestOperationB.style.color = "red";
+                            document.getElementById("latestOperationB").innerHTML = "Alarm [" + PMID + " - Steady Current exceeds]";
+                            break;
+                        case 4:
+                            latestOperationC.style.color = "red";
+                            document.getElementById("latestOperationC").innerHTML = "Alarm [" + PMID + " - Time exceeds]";  
+                    }
+ 
+                }
+                if (currentPMStatus[i] == 2){
+                    switch (i){
+                        case 0:
+                            latestOperationA.style.color = "orange";
+                            document.getElementById("latestOperationA").innerHTML = "Alert [" + PMID + " - MaxA exceeds]"; 
+                            break;
+                        case 2:
+                            latestOperationB.style.color = "orange";
+                            document.getElementById("latestOperationB").innerHTML = "Alert [" + PMID + " - Steady Current exceeds]";
+                            break;
+                        case 4:
+                            latestOperationC.style.color = "orange";
+                            document.getElementById("latestOperationC").innerHTML = "Alert [" + PMID + " - Time exceeds]"; 
+                            break; 
+                    }
+                }
+                if (currentPMStatus[i] == 1){
+                    switch (i){
+                        case 0:
+                            latestOperationA.style.color = "green";
+                            document.getElementById("latestOperationA").innerHTML = "Normal MaxA";
+                            break;
+                        case 2:
+                            latestOperationB.style.color = "green";
+                            document.getElementById("latestOperationB").innerHTML = "Normal Steady Current]";
+                            break;
+                        case 4:
+                            latestOperationC.style.color = "green";
+                            document.getElementById("latestOperationC").innerHTML = "Normal Time]"; 
+                            break; 
+                    }
+
+                }
+            }
+
             RTupDate_chart();
         }  //if one graph
     };
