@@ -30,7 +30,7 @@ def normalCurrent():
     for i in range(len(finalResult)):
         finalResult[i] = float(finalResult[i])
       
-    #eel.js_bigger(f'{count}rem')    js function to py template
+    #eel.js_bigger(f'{1}rem')    #js function to py template
     
     return (finalResult)
 
@@ -226,6 +226,108 @@ def diagnosticUnit():       # return 3 = ALARM; return 2 = ALERT; return 1 = NOR
     return opStatus
 
 print(diagnosticUnit())
+
+#----------------------trendAnalysis-----------------------------------------------------------------------------------------------
+
+@eel.expose
+def returnAvgMaxA():
+    query = """SELECT TOP 10 Data2, Data3 FROM Records WHERE PMID='{PMID}' ORDER BY (str(RDate) + str(RTime)) DESC;"""
+    cursor.execute(query.format(
+        PMID=eel.showValue()()
+    ))
+    initialMaxA = str(cursor.fetchall())
+    finalMaxA = ['0'] * 20
+    finalMaxA = re.findall('\d*\.?\d+',initialMaxA)
+    for i in range(len(finalMaxA)):
+        finalMaxA[i] = float(finalMaxA[i])
+    averageMaxA = ['0'] * 10
+    for i in range(len(finalMaxA)):
+        if (i%2) == 1 :
+            averageMaxA[int((i-1)/2)] = (finalMaxA[i] + finalMaxA[i-1] ) /2
+
+    temp = ['0'] * 10       #Reverse array
+    for i in range(len(averageMaxA)):
+        temp[i] = averageMaxA[i]
+    for i in range(len(averageMaxA)):
+        averageMaxA[i] = temp[len(averageMaxA) - i - 1]
+
+    return averageMaxA
+
+@eel.expose
+def returnSteadyA():
+    query = """SELECT TOP 10 Data11, Data12, Data13, Data14, Data15 FROM Records WHERE PMID='{PMID}' ORDER BY (str(RDate) + str(RTime)) DESC;"""
+    cursor.execute(query.format(
+        PMID=eel.showValue()()
+    ))
+    initialSteadyA = str(cursor.fetchall())
+    finalSteadyA = ['0'] * 150
+    finalSteadyA = re.findall('\d*\.?\d+',initialSteadyA)
+    for i in range(len(finalSteadyA)):
+        finalSteadyA[i] = float(finalSteadyA[i])
+    averageSteadyA = ['0'] * 10
+    for i in range(len(finalSteadyA)):
+        if (i%5) == 4 :
+            averageSteadyA[int(i/5)] = round(((finalSteadyA[i] + finalSteadyA[i-1] + finalSteadyA[i-2] + finalSteadyA[i-3] + finalSteadyA[i-4]) /5), 3)
+
+    temp = ['0'] * 10   #Reverse array
+    for i in range(len(averageSteadyA)):
+        temp[i] = averageSteadyA[i]
+    for i in range(len(averageSteadyA)):
+        averageSteadyA[i] = temp[len(averageSteadyA) - i - 1]
+
+    return averageSteadyA
+
+@eel.expose
+def returnTime():
+    query = """SELECT TOP 10 RDate, RTime FROM Records WHERE PMID='{PMID}' ORDER BY (str(RDate) + str(RTime)) DESC;"""
+    cursor.execute(query.format(
+    PMID=eel.showValue()()
+    ))
+    initialTime = str(cursor.fetchall())
+    finalTime = ['0'] * 20
+    finalTime = re.findall('\d*\.?\d+',initialTime)
+    opDate = ['0'] * 10
+    opTime = ['0'] * 10
+    for i in range(len(finalTime)):
+        finalTime[i] = float(finalTime[i])
+        if (i%2) == 1:
+            opTime[int(i/2)]= finalTime[i]
+        else:
+            opDate[int((i/2)-1)]= finalTime[i]
+        output = [opDate, opTime]   # output[0]=opDate, output[1]=opTime
+    return output
+
+@eel.expose
+def returnDuration():
+    query = """SELECT TOP 10 Data1, Data2, Data3, Data4, Data5, Data6, Data7, Data8, Data9, Data10, Data11, Data12, Data13, Data14, Data15, Data16, Data17, Data18, Data19, Data20, Data21, Data22, Data23, Data24, Data25, Data26, Data27, Data28, Data29, Data30, Data31, Data32, Data33, Data34 FROM Records WHERE PMID='{PMID}' ORDER BY (str(RDate) + str(RTime)) DESC;"""
+    cursor.execute(query.format(
+        PMID=eel.showValue()()
+    ))
+    initialDuration = str(cursor.fetchall())
+    finalDuration = ['0'] * 340
+    finalDuration = re.findall('\d*\.?\d+',initialDuration)
+    for i in range(len(finalDuration)):
+        finalDuration[i] = float(finalDuration[i])
+    opDuration = ['0'] * 10
+    n = 0
+    i = 0
+    while i < 339:
+        i += 1
+        if finalDuration[i] == 0:
+            opDuration[n] = (i%34 + 1)
+            n += 1
+            i = (int(i/34)) * 34 + 34
+
+    temp = ['0'] * 10       #Reverse array
+    for i in range(len(opDuration)):
+        temp[i] = opDuration[i]
+    for i in range(len(opDuration)):
+        opDuration[i] = temp[len(opDuration) - i - 1]
+
+    return opDuration
+
+        
+
 
 eel.init('web')
 eel.start('templates/main.html', jinja_templates='templates',   #https://stackoverflow.com/questions/66410660/how-to-use-jinja2-template-in-eel-python

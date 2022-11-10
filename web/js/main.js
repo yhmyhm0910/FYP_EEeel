@@ -9,9 +9,8 @@ async function RTupDate(){
 }
 
 eel.expose(js_bigger);  //js function to py template
-function js_bigger(count){
-    //改變<p>tag 文字的大小     
-    document.querySelector('p').style.fontSize = count ;
+function js_bigger(count){   
+    return [123, 456, 789]
 }
 
 let normalData, actualData, PMID, myChart, myChart_A, myChart_B, currentPMStatus, currentPMStatus_A //globalize
