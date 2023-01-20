@@ -93,8 +93,6 @@ def PMID():
     initialPMID = str(cursor.fetchall())
     finalPMID = [0]
     finalPMID = re.findall("[a-zA-Z0-9]+",initialPMID)
-    if (("A" in finalPMID[0]) | ("B" in finalPMID[0])):
-        print ("contain")    #To BE ACTION
     return str(finalPMID[0])
 
 @eel.expose
@@ -103,8 +101,6 @@ def PMID_A():     #When passed TWO PMs, select the PMID of A
     initialPMID = str(cursor.fetchall())
     finalPMID = [0]
     finalPMID = re.findall("[a-zA-Z0-9]+",initialPMID)
-    if (("A" in finalPMID[0]) | ("B" in finalPMID[0])):
-        print ("contain")    #To BE ACTION
     return str(finalPMID[0])
 
 @eel.expose
@@ -144,19 +140,14 @@ def diagnosticUnit():       # return 3 = ALARM; return 2 = ALERT; return 1 = NOR
         for i in range(len(finalSteadyCurrent)):
             finalSteadyCurrent[i] = float(finalSteadyCurrent[i])
 
-        statusEach = [0] * 5    
-        for i in range(len(finalSteadyCurrent)):    #rank status of every point
-            if finalSteadyCurrent[i] >= 6:
-                statusEach[i] = 3
-            if finalSteadyCurrent[i] <3:
-                statusEach[i] = 1
-            if statusEach[i] == 0:
-                statusEach[i] = 2
-        
-        finalStatus = statusEach[0]
-        for i in range(len(statusEach)-1):    #choose max status
-            if statusEach[i+1] > statusEach[i]:
-                finalStatus = statusEach[i+1]
+        meanSteadyCurrent = (finalSteadyCurrent[0] + finalSteadyCurrent[1] + finalSteadyCurrent[2] + finalSteadyCurrent[3] + finalSteadyCurrent[4])/5
+
+        if meanSteadyCurrent >= 6:
+            finalStatus = 3
+        if meanSteadyCurrent <3:
+            finalStatus = 1
+        if (meanSteadyCurrent >= 3 and meanSteadyCurrent < 6):
+            finalStatus = 2
 
         return finalStatus
 
@@ -168,19 +159,14 @@ def diagnosticUnit():       # return 3 = ALARM; return 2 = ALERT; return 1 = NOR
         for i in range(len(finalSteadyCurrent)):
             finalSteadyCurrent[i] = float(finalSteadyCurrent[i])
 
-        statusEach = [0] * 5    
-        for i in range(len(finalSteadyCurrent)):    #rank status of every point
-            if finalSteadyCurrent[i] >= 6:
-                statusEach[i] = 3
-            if finalSteadyCurrent[i] <3:
-                statusEach[i] = 1
-            if statusEach[i] == 0:
-                statusEach[i] = 2
-        
-        finalStatus = statusEach[0]
-        for i in range(len(statusEach)-1):    #choose max status
-            if statusEach[i+1] > statusEach[i]:
-                finalStatus = statusEach[i+1]
+        meanSteadyCurrent = (finalSteadyCurrent[0] + finalSteadyCurrent[1] + finalSteadyCurrent[2] + finalSteadyCurrent[3] + finalSteadyCurrent[4])/5
+
+        if meanSteadyCurrent >= 6:
+            finalStatus = 3
+        if meanSteadyCurrent <3:
+            finalStatus = 1
+        if (meanSteadyCurrent >= 3 and meanSteadyCurrent < 6):
+            finalStatus = 2
 
         return finalStatus
 
@@ -222,7 +208,7 @@ def diagnosticUnit():       # return 3 = ALARM; return 2 = ALERT; return 1 = NOR
     opStatus[4] = fetchTime()
     opStatus[5] = fetchTime_A()
     #opStatus = [Max(B), MaxA, Steady(B), SteadyA, Time(B), TimeA]
-    
+    # return 3 = ALARM; return 2 = ALERT; return 1 = NORMAL
     return opStatus
 
 print(diagnosticUnit())
@@ -332,3 +318,6 @@ def returnDuration():
 eel.init('web')
 eel.start('templates/main.html', jinja_templates='templates',   #https://stackoverflow.com/questions/66410660/how-to-use-jinja2-template-in-eel-python
     size = (600,400))
+
+
+

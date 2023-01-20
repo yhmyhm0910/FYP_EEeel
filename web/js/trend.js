@@ -164,16 +164,19 @@ async function analysisChart(){
         }]
     };
 
-
+    var opYaxis;
 
     if (document.getElementById('toCheck').value == "Maximum Current"){
         opData = maxAdata;
+        opYaxis = 'Current (A)';
     }
     if (document.getElementById('toCheck').value == "Steady State Current"){
         opData = SteadyAdata;
+        opYaxis = 'Current (A)';
     }   
     if (document.getElementById('toCheck').value == "Operating Time"){
         opData = durationTime;
+        opYaxis = 'Time (s)';
     }
 
     const config = {
@@ -200,7 +203,7 @@ async function analysisChart(){
                 display: true,
                 title:{
                 display: true,
-                text: 'Current (A)'
+                text: opYaxis
                 }
             }
         }

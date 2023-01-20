@@ -3,13 +3,101 @@
 {% block content %}
 <style>
     .chartBox {
-        width: 80%;
+        width: 60%;
+    }
+
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+    .row::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+    .row {
+        margin-left:-5px;
+        margin-right:-5px;
+    }
+    .column {
+        float: left;
+        width: 40%;
+        padding: 5px;
+    }
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 1px;
+    }
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+    h2 br {
+        display: inline;
     }
 </style>
-<h2 id="latestOperationA"></h2><h2 id="latestOperationB"></h2><h2 id="latestOperationC"></h2>
+<div class="row">
+    <div class="column">
+        <table id="table1">
+        <tr>
+            <th>Latest Operation</th>
+            <th>Status</th>
+            <th>Recorded</th>
+            <th>Accptable Range</th>
+        </tr>
+        <tr>
+            <td>Maximum Current</td>
+            <td id="latestOperationA"></td>
+            <td id="latestMaxA"></td>
+            <td>12;12-16;16</td>
+        </tr>
+        <tr>
+            <td>Steady Current</td>
+            <td id="latestOperationB"></td>
+            <td id="latestSteadyA"></td>
+            <td>3;3-6;6</td>
+        </tr>
+        <tr>
+            <td>Operation Time</td>
+            <td id="latestOperationC"></td>
+            <td id="latestTime"></td>
+            <td>7.5;7.5-10;10</td>
+        </tr>
+        </table>
+    </div>
+    <div class="column">
+        <table id="table2">
+            <tr>
+            <th>Latest Operation</th>
+            <th>Status</th>
+            <th>Recorded</th>
+            <th>Accptable Range</th>
+            </tr>
+            <tr>
+            <td>Maximum Current</td>
+            <td id="latestOperationA_2"></td>
+            <td id="latestMaxA_2"></td>
+            <td></td>
+            </tr>
+            <tr>
+            <td>Steady Current</td>
+            <td id="latestOperationB_2"></td>
+            <td id="latestSteadyA_2"></td>
+            <td></td>
+            </tr>
+            <tr>
+            <td>Operation Time</td>
+            <td id="latestOperationC_2"></td>
+            <td id="latestTime_2"></td>
+            <td></td>
+            </tr>
+        </table>
+    </div>
+</div>
 
-<p id="return"></p>     <!-- 將返回的值 設定在這個<p>內  -->
-<p id="return2"></p> 
+<H3 id="faultPresent"></H3>
+<H3 id="faultPresent_2"></H3>
 
 <div id="div" class="chartBox">
     <canvas id="myChart"></canvas>
@@ -21,5 +109,13 @@
     <canvas id="myChart_B"></canvas>
 </div>
 <script type="text/javascript" src="../js/main.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
+
+<h4>Failures Happened</h4>
+<table id="recordTable">
+    <tr>
+        <th>Record</th>
+        <th>Detected Problem</th>
+    </tr>   
+</table>
 {% endblock %}
