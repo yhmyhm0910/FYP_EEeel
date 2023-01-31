@@ -3,10 +3,14 @@ import eel
 import re   #extract decimals from list
 import time
 import pyodbc   #database usage
-server = 'yhmyhm0910.database.windows.net'  #Database connection is putted here as pages need to use conn (it is global here)
-database = 'freeDB'
-username = "19060016d@connect.polyu.hk"
-password = '{Nelsonzz9}'   
+
+file = open('confidential.txt', 'r')    #database security
+secret = file.readlines()
+
+server = secret[0].strip()  #Database connection is putted here as pages need to use conn (it is global here)
+database = secret[1].strip()
+username = secret[2].strip()
+password = secret[3].strip()   
 driver= '{ODBC Driver 17 for SQL Server}'
 Authentication='ActiveDirectoryPassword' #This is so very important, @connect.polyu.hk issue https://github.com/mkleehammer/pyodbc/issues/1008
 conn = pyodbc.connect(
@@ -19,7 +23,6 @@ conn = pyodbc.connect(
 ) 
 global cursor
 cursor = conn.cursor()
-
 
 @eel.expose 
 def normalCurrent():
