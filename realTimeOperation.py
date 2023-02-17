@@ -1,7 +1,6 @@
 #https://neutron0916.medium.com/python-eel-%E5%89%B5%E9%80%A0%E5%80%8B%E4%BA%BA%E7%B6%B2%E9%A0%81gui%E6%A1%8C%E9%9D%A2%E6%87%89%E7%94%A8%E7%A8%8B%E5%BC%8F-%E5%85%A5%E9%96%80%E7%AF%87-2500b38ed070
 import eel
 import re   #extract decimals from list
-import time
 import pyodbc   #database usage
 
 file = open('confidential.txt', 'r')    #database security
@@ -12,7 +11,7 @@ database = secret[1].strip()
 username = secret[2].strip()
 password = secret[3].strip()   
 driver= '{ODBC Driver 17 for SQL Server}'
-Authentication='ActiveDirectoryPassword' #This is so very important, @connect.polyu.hk issue https://github.com/mkleehammer/pyodbc/issues/1008
+Authentication='ActiveDirectoryPassword' #This is so very important, email format issue https://github.com/mkleehammer/pyodbc/issues/1008
 conn = pyodbc.connect(
     'AUTHENTICATION='+Authentication+
     ';DRIVER='+driver+
@@ -210,7 +209,7 @@ def diagnosticUnit():       # return 3 = ALARM; return 2 = ALERT; return 1 = NOR
     opStatus[3] = fetchSteadyCurrent_A()
     opStatus[4] = fetchTime()
     opStatus[5] = fetchTime_A()
-    #opStatus = [Max(B), MaxA, Steady(B), SteadyA, Time(B), TimeA]
+    #opStatus = [MaxA(B), MaxA, SteadyA(B), SteadyA, Time(B), TimeA]
     # return 3 = ALARM; return 2 = ALERT; return 1 = NORMAL
     return opStatus
 
@@ -321,6 +320,3 @@ def returnDuration():
 eel.init('web')
 eel.start('templates/main.html', jinja_templates='templates',   #https://stackoverflow.com/questions/66410660/how-to-use-jinja2-template-in-eel-python
     size = (600,400))
-
-
-
