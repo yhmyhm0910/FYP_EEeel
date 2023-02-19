@@ -33,39 +33,44 @@
     tr:nth-child(even) {
         background-color: #dddddd;
     }
+    .textmiddle {
+        text-align:center;
+    }
 
 </style>
+
+<body style="right: 3px">
 <div class="row">
     <div class="column">
-        <table id="table1">
+        <table id="table1" style="width: 100%">
         <tr>
             <th>Latest Operation</th>
             <th>Status</th>
             <th>Recorded</th>
-            <th>Accptable Range</th>
+            <th>Acceptable Range</th>
         </tr>
         <tr>
             <td>Maximum Current</td>
             <td id="latestOperationA"></td>
             <td id="latestMaxA"></td>
-            <td>12;12-16;16</td>
+            <td class="textmiddle"><span style="color: green">&#60;12</span> | <span style="color: orange">12-16</span> | <span style="color: red">&#62;16</span></td>
         </tr>
         <tr>
             <td>Steady Current</td>
             <td id="latestOperationB"></td>
             <td id="latestSteadyA"></td>
-            <td>3;3-6;6</td>
+            <td class="textmiddle"><span style="color: green">&#60;3</span> | <span style="color: orange">3-6</span> | <span style="color: red">&#62;6</span></td>
         </tr>
         <tr>
             <td>Operation Time</td>
             <td id="latestOperationC"></td>
             <td id="latestTime"></td>
-            <td>7.5;7.5-10;10</td>
+            <td class="textmiddle"><span style="color: green">&#60;7.5</span> | <span style="color: orange">7.5-10</span> | <span style="color: red">&#62;10</span></td>
         </tr>
         </table>
     </div>
     <div class="column">
-        <table id="table2">
+        <table id="table2" style="width: 100%">
             <tr>
             <th>Latest Operation</th>
             <th>Status</th>
@@ -76,26 +81,32 @@
             <td>Maximum Current</td>
             <td id="latestOperationA_2"></td>
             <td id="latestMaxA_2"></td>
-            <td></td>
+            <td class="textmiddle"><span style="color: green">&#60;12</span> | <span style="color: orange">12-16</span> | <span style="color: red">&#62;16</span></td>
             </tr>
             <tr>
             <td>Steady Current</td>
             <td id="latestOperationB_2"></td>
             <td id="latestSteadyA_2"></td>
-            <td></td>
+            <td class="textmiddle"><span style="color: green">&#60;3</span> | <span style="color: orange">3-6</span> | <span style="color: red">&#62;6</span></td>
             </tr>
             <tr>
             <td>Operation Time</td>
             <td id="latestOperationC_2"></td>
             <td id="latestTime_2"></td>
-            <td></td>
+            <td class="textmiddle"><span style="color: green">&#60;7.5</span> | <span style="color: orange">7.5-10</span> | <span style="color: red">&#62;10</span></td>
             </tr>
         </table>
     </div>
 </div>
-<H3 id="PMID"></H3>
-<H3 id="faultPresent"><span id="stickyChair"></span><span id="encountersObstruction"></span><span id="failsLock"></span><span id="failsStart"></span><span id="failsSwitch"></span><span id="normal"></span></H3>
-<H3 id="faultPresent_2"></H3>
+
+<H5 id="PMID"></H5>
+<div style="width: 50%; float:left">
+    <H3 id="faultPresent"><span id="stickyChair"></span><span id="encountersObstruction"></span><span id="failsLock"></span><span id="failsStart"></span><span id="failsSwitch"></span><span id="normal"></span></H3>
+</div>
+<div style="margin-left: 50%;">
+    <H3 id="faultPresent_2"><span id="stickyChair_2"></span><span id="encountersObstruction_2"></span><span id="failsLock_2"></span><span id="failsStart_2"></span><span id="failsSwitch_2"></span><span id="normal_2"></span></H3>
+</div>
+
 
 <div id="div" class="chartBox">
     <canvas id="myChart"></canvas>
@@ -116,4 +127,5 @@
         <th>Detected Problem</th>
     </tr>   
 </table>
+</body>
 {% endblock %}

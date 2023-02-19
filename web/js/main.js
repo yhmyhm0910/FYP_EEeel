@@ -265,11 +265,28 @@ async function RTupDate_chart(){    //Single graph
 
 let myInterval
 function setInterval_f(){
-    myInterval = setInterval(changeChart,3000);
+    myInterval = setInterval(changeChart,1000);
 }
 
 setInterval_f();
 async function changeChart(){
+
+    const cleartext = () => {    //initialize every content
+        document.getElementById("stickyChair").innerHTML = '';
+        document.getElementById("encountersObstruction").innerHTML = '';
+        document.getElementById("failsLock").innerHTML = '';
+        document.getElementById("failsStart").innerHTML = '';
+        document.getElementById("failsSwitch").innerHTML = '';
+        document.getElementById("normal").innerHTML = '';
+
+        document.getElementById("stickyChair_2").innerHTML = '';
+        document.getElementById("encountersObstruction_2").innerHTML = '';
+        document.getElementById("failsLock_2").innerHTML = '';
+        document.getElementById("failsStart_2").innerHTML = '';
+        document.getElementById("failsSwitch_2").innerHTML = '';
+        document.getElementById("normal_2").innerHTML = ''; 
+    }
+
     if (JSON.stringify(PMID) != JSON.stringify(latestPMID)){  //after JSON.stingify they will be the same
         PMID = await eel.PMID()();  //for sync
 
@@ -298,7 +315,8 @@ async function changeChart(){
                     var Div2 = document.getElementById("div2");
                     Div2.style.display = "block";
                     var showTable = document.getElementById("table2");
-                    showTable.style.display = "block";
+                    showTable.style.visibility = "visible";
+                    cleartext();
 
                     currentPMStatus = await eel.diagnosticUnit()(); 
                     var latestData_A = await eel.actualCurrent_A()();
@@ -468,47 +486,70 @@ async function changeChart(){
                             }      //end of switch
                         }   //end of normal
                     }   //end of for loop (check status)
-                    let printed_A;
-                    printed_A = false;
+                    let PMID_A = await eel.PMID_A()()
+                    document.getElementById("PMID").innerHTML = `Possible Faults of ${PMID_A} and ${PMID}:`;
+                    let printed_A = false;
                     normal_A = false;
-                    document.getElementById("faultPresent").innerHTML = " ";
                     if (currentPMStatus[1] > 1 && currentPMStatus[3] > 1){  //point with sticky chair (PM_A)
                         printed_A = true;
                         if (currentPMStatus[1] == 3 || currentPMStatus[3] == 3){    //Alarm
-                            faultPresent.style.color = "red";
-                            document.getElementById("faultPresent").innerHTML = "[" + await eel.PMID_A()() + "] " + "ALARM! Point with Sticky Chair";
+                            document.getElementById("stickyChair").style.color = "red";
+                            document.getElementById("stickyChair").innerHTML = (`[${PMID_A}] ALARM! Point with Sticky Chair\n`).replace(/\n/g,'<br />');
                         }
-                        else {
-                            faultPresent.style.color = "orange";
-                            document.getElementById("faultPresent").innerHTML = "[" + await eel.PMID_A()() + "] " + "Alert: Point with Sticky Chair";
+                        else {  //Alert
+                            document.getElementById("stickyChair").style.color = "orange";
+                            document.getElementById("stickyChair").innerHTML = (`[${PMID_A}]Alert: Point with Sticky Chair\n`).replace(/\n/g,'<br />');
                         }
                     }
                     if (currentPMStatus[3] > 1 && currentPMStatus[5] > 1){  //print obstuction (PM_A)
                         printed_A = true;
-                        if (currentPMStatus[3] == 3 || currentPMStatus[5] == 3){    //Alert
-                            faultPresent.style.color = "red";
-                            document.getElementById("faultPresent").innerHTML = "[" + await eel.PMID_A()() + "] " + "ALARM! Point Encounters Obstruction";
+                        if (currentPMStatus[3] == 3 || currentPMStatus[5] == 3){    //Alarm
+                            document.getElementById("encountersObstruction").style.color = "red";
+                            document.getElementById("encountersObstruction").innerHTML = (`[${PMID_A}] ALARM! Point Encounters Obstruction\n`).replace(/\n/g,'<br />');
                         }
-                        else {
-                            faultPresent.style.color = "orange";
-                            document.getElementById("faultPresent").innerHTML = "[" + await eel.PMID_A()() + "] " + "Alert: Point Encounters Obstruction";
+                        else {  //Alert
+                            document.getElementById("encountersObstruction").style.color = "orange";
+                            document.getElementById("encountersObstruction").innerHTML = (`[${PMID_A}] Alert: Point Encounters Obstruction\n`).replace(/\n/g,'<br />');
                         }
                     }
                     if (currentPMStatus[3] == 1 && currentPMStatus[5] > 1){  //print fails to lock (PM_A)
                         printed_A = true;
-                        if (currentPMStatus[5] == 3){    //Alert
-                            faultPresent.style.color = "red";
-                            document.getElementById("faultPresent").innerHTML = "[" + await eel.PMID_A()() + "] " + "ALARM! Point Fails to Lock";
+                        if (currentPMStatus[5] == 3){    //Alarm
+                            document.getElementById("failsLock").style.color = "red";
+                            document.getElementById("failsLock").innerHTML = (`[${PMID_A}] ALARM! Point Fails to Lock\n`).replace(/\n/g,'<br />');
                         }
-                        else {
-                            faultPresent.style.color = "orange";
-                            document.getElementById("faultPresent").innerHTML = "[" + await eel.PMID_A()() + "] " + "Alert: Point Fails to Lock";
+                        else {  //Alert
+                            document.getElementById("failsLock").style.color = "orange";
+                            document.getElementById("failsLock").innerHTML = (`[${PMID_A}] Alert: Point Fails to Lock\n`).replace(/\n/g,'<br />');
+                        }
+                    }
+                    if (currentPMStatus[1] > 1){  //Point Fails to Start
+                        printed_A = true;
+                        if (currentPMStatus[1] == 3){    //Alarm
+                            document.getElementById("failsStart").style.color = "red";
+                            document.getElementById("failsStart").innerHTML = (`[${PMID_A}] ALARM! Point Fails to Start\n`).replace(/\n/g,'<br />');
+                        }
+                        else {  //Alert
+                            document.getElementById("failsStart").style.color = "orange";
+                            document.getElementById("failsStart").innerHTML = (`[${PMID_A}] Alert: Point Fails to Start\n`).replace(/\n/g,'<br />');
+                        }
+                    }
+                    if (currentPMStatus[3] > 1){  //Point Fails to Switch
+                        printed_A = true;
+                        if (currentPMStatus[3] == 3){    //Alarm
+                            document.getElementById("failsSwitch").style.color = "red";
+                            document.getElementById("failsSwitch").innerHTML = (`[${PMID_A}] ALARM! Point Fails to Switch\n`).replace(/\n/g,'<br />');
+                        }
+                        else {  //Alert
+                            document.getElementById("failsSwitch").style.color = "orange";
+                            document.getElementById("failsSwitch").innerHTML = (`[${PMID_A}] Alert: Point Fails to Switch\n`).replace(/\n/g,'<br />');
                         }
                     }
                     if (printed_A == false){  //Normal_A
                         normal_A = true;
-                        faultPresent.style.color = "green";
-                        document.getElementById("faultPresent").innerHTML = "[" + await eel.PMID_A()() + "] " + "Normal Operating";
+                        printed_A = true;
+                        document.getElementById("normal").style.color = "green";
+                        document.getElementById("normal").innerHTML = `[${PMID_A}] Normal Operating`;
                     }
                     if (normal_A == false){   //record detected fault
                         var table = document.getElementById("recordTable");
@@ -518,46 +559,68 @@ async function changeChart(){
                         cell1.innerHTML = await eel.PMID_A()() + ' - ' + await eel.RDate_A()() + ' - ' + await eel.RTime_A()();
                         cell2.innerHTML = document.getElementById("faultPresent").innerHTML;
                     }
-                    let printed_B;
+                    let printed_B = false;
                     normal_B = false;
-                    printed_B = false;
                     if (currentPMStatus[0] > 1 && currentPMStatus[2] > 1){  //point with sticky chair
                         printed_B = true;
                         if (currentPMStatus[0] == 3 || currentPMStatus[2] == 3){    //Alarm
-                            faultPresent_2.style.color = "red";
-                            document.getElementById("faultPresent_2").innerHTML = "[" + await eel.PMID()() + "] " + "ALARM! Point with Sticky Chair";
+                            document.getElementById("stickyChair_2").style.color = "red";
+                            document.getElementById("stickyChair_2").innerHTML = (`[${PMID}] ALARM! Point with Sticky Chair\n`).replace(/\n/g,'<br />');
                         }
                         else {  //alert
-                            faultPresent_2.style.color = "orange";
-                            document.getElementById("faultPresent_2").innerHTML = "[" + await eel.PMID()() + "] " + "Alert: Point with Sticky Chair";
+                            document.getElementById("stickyChair_2").style.color = "orange";
+                            document.getElementById("stickyChair_2").innerHTML = (`[${PMID}] Alert: Point with Sticky Chair\n`).replace(/\n/g,'<br />');
                         }
                     }
                     if (currentPMStatus[2] > 1 && currentPMStatus[4] > 1){  //print obstruction
                         printed_B = true;
                         if (currentPMStatus[2] == 3 || currentPMStatus[4] == 3){    //Alarm
-                            faultPresent_2.style.color = "red";
-                            document.getElementById("faultPresent_2").innerHTML = "[" + await eel.PMID()() + "] " + "ALARM! Point Encounters Obstruction";
+                            document.getElementById("encountersObstruction_2").style.color = "red";
+                            document.getElementById("encountersObstruction_2").innerHTML = (`[${PMID}] ALARM! Point Encounters Obstruction\n`).replace(/\n/g,'<br />');
                         }
                         else {  //alert
-                            faultPresent_2.style.color = "orange";
-                            document.getElementById("faultPresent_2").innerHTML = "[" + await eel.PMID()() + "] " + "Alert: Point Encounters Obstruction";
+                            document.getElementById("encountersObstruction_2").style.color = "orange";
+                            document.getElementById("encountersObstruction_2").innerHTML = (`[${PMID}] Alert: Point Encounters Obstruction\n`).replace(/\n/g,'<br />');
                         }
                     }
                     if (currentPMStatus[2] == 1 && currentPMStatus[4] > 1){  //point fails to lock
                         printed_B = true;
                         if (currentPMStatus[4] == 3){    //Alarm
-                            faultPresent_2.style.color = "red";
-                            document.getElementById("faultPresent_2").innerHTML = "[" + await eel.PMID()() + "] " + "ALARM! Point Fails to Lock";
+                            document.getElementById("failsLock_2").style.color = "red";
+                            document.getElementById("failsLock_2").innerHTML = (`[${PMID}] ALARM! Point Fails to Lock\n`).replace(/\n/g,'<br />');
                         }
                         else {  //alert
-                            faultPresent_2.style.color = "orange";
-                            document.getElementById("faultPresent_2").innerHTML = "[" + await eel.PMID()() + "] " + "Alert: Point Fails to Lock";
+                            document.getElementById("failsLock_2").style.color = "orange";
+                            document.getElementById("failsLock_2").innerHTML = (`[${PMID}] Alert: Point Fails to Lock\n`).replace(/\n/g,'<br />');
+                        }
+                    }
+                    if (currentPMStatus[0] > 1){  //Point Fails to Start
+                        printed_B = true;
+                        if (currentPMStatus[0] == 3){    //Alarm
+                            document.getElementById("failsStart_2").style.color = "red";
+                            document.getElementById("failsStart_2").innerHTML = (`[${PMID}] ALARM! Point Fails to Start\n`).replace(/\n/g,'<br />');
+                        }
+                        else {  //Alert
+                            document.getElementById("failsStart_2").style.color = "orange";
+                            document.getElementById("failsStart_2").innerHTML = (`[${PMID}] Alert: Point Fails to Start\n`).replace(/\n/g,'<br />');
+                        }
+                    }
+                    if (currentPMStatus[2] > 1){  //Point Fails to Switch
+                        printed_B = true;
+                        if (currentPMStatus[2] == 3){    //Alarm
+                            document.getElementById("failsSwitch_2").style.color = "red";
+                            document.getElementById("failsSwitch_2").innerHTML = (`[${PMID}] ALARM! Point Fails to Switch\n`).replace(/\n/g,'<br />');
+                        }
+                        else {  //Alert
+                            document.getElementById("failsSwitch_2").style.color = "orange";
+                            document.getElementById("failsSwitch_2").innerHTML = (`[${PMID}] Alert: Point Fails to Switch\n`).replace(/\n/g,'<br />');
                         }
                     }
                     if (printed_B == false){  //Normal
                         normal_B = true;
-                        faultPresent_2.style.color = "green";
-                        document.getElementById("faultPresent_2").innerHTML = "[" + await eel.PMID()() + "] " + "Normal Operating";
+                        printed_B = true;
+                        document.getElementById("normal_2").style.color = "green";
+                        document.getElementById("normal_2").innerHTML = `[${PMID}] Normal Operating`;
                     }
                     if (normal_B == false){   //record detected fault
                         var table = document.getElementById("recordTable");
@@ -583,13 +646,14 @@ async function changeChart(){
             var latestData = await eel.actualCurrent()();
             
             var noTable = document.getElementById("table2");
-            noTable.style.display = "none";
+            noTable.style.visibility = "hidden";
             var noDiv1 = document.getElementById("div1");
             noDiv1.style.display = "none";
             var noDiv2 = document.getElementById("div2");
             noDiv2.style.display = "none";
             var showDiv = document.getElementById("div");
             showDiv.style.display = "block";
+            cleartext();
 
             for (let i = 0; i < currentPMStatus.length ; i++) {     //for status bar (1 graph)
                 if (currentPMStatus[i] == 3){   // == Alarm
@@ -684,67 +748,67 @@ async function changeChart(){
             let printed, normal;
             printed = false;
             normal = false;
-            document.getElementById("faultPresent_2").innerHTML = ' ';
             document.getElementById("PMID").innerHTML = `Possible Faults of ${PMID}:`;
             if (currentPMStatus[0] > 1 && currentPMStatus[2] > 1){  //Point with Sticky Chair
                 printed = true;
                 if (currentPMStatus[0] == 3 || currentPMStatus[2] == 3){    //Alarm
-                    stickyChair.style.color = "red";
+                    document.getElementById("stickyChair").style.color = "red";
                     document.getElementById("stickyChair").innerHTML = ("ALARM! Point with Sticky Chair\n").replace(/\n/g,'<br />');
                 }
                 else {  //Alert
-                    stickyChair.style.color = "orange";
-                    document.getElementById("stickyChair").innerHTML = ("Alert: Point with Sticky Chair\n");
+                    document.getElementById("stickyChair").style.color = "orange";
+                    document.getElementById("stickyChair").innerHTML = ("Alert: Point with Sticky Chair\n").replace(/\n/g,'<br />');
                 }
             }
             if (currentPMStatus[2] > 1 && currentPMStatus[4] > 1){  //Point Encounters Obstruction
                 printed = true;
                 if (currentPMStatus[2] == 3 || currentPMStatus[4] == 3){    //Alarm
-                    encountersObstruction.style.color = "red";
-                    document.getElementById("encountersObstruction").innerHTML += ("ALARM! Point Encounters Obstruction \n").replace(/\n/g,'<br />');
+                    document.getElementById("encountersObstruction").style.color = "red";
+                    document.getElementById("encountersObstruction").innerHTML = ("ALARM! Point Encounters Obstruction \n").replace(/\n/g,'<br />');
                 }
                 else {  //Alert
-                    encountersObstruction.style.color = "orange";
-                    document.getElementById("encountersObstruction").innerHTML += ("Alert: Point Encounters Obstruction\n").replace(/\n/g,'<br />');
+                    document.getElementById("encountersObstruction").style.color = "orange";
+                    document.getElementById("encountersObstruction").innerHTML = ("Alert: Point Encounters Obstruction\n").replace(/\n/g,'<br />');
                 }
             }
             if (currentPMStatus[4] > 1){  //Point Fails to Lock
                 printed = true;
                 if (currentPMStatus[4] == 3){    //Alarm
-                    failsLock.style.color = "red";
-                    document.getElementById("failsLock").innerHTML += ("ALARM! Point Fails to Lock\n").replace(/\n/g,'<br />');
+                    document.getElementById("failsLock").style.color = "red";
+                    document.getElementById("failsLock").innerHTML = ("ALARM! Point Fails to Lock\n").replace(/\n/g,'<br />');
                 }
                 else {  //Alert
-                    failsLock.style.color = "orange";
-                    document.getElementById("failsLock").innerHTML += ("Alert: Point Fails to Lock\n").replace(/\n/g,'<br />');
+                    document.getElementById("failsLock").style.color = "orange";
+                    document.getElementById("failsLock").innerHTML = ("Alert: Point Fails to Lock\n").replace(/\n/g,'<br />');
                 }
             }
             if (currentPMStatus[0] > 1){  //Point Fails to Start
                 printed = true;
                 if (currentPMStatus[0] == 3){    //Alarm
-                    failsStart.style.color = "red";
-                    document.getElementById("failsStart").innerHTML += ("ALARM! Point Fails to Start\n").replace(/\n/g,'<br />');
+                    document.getElementById("failsStart").style.color = "red";
+                    document.getElementById("failsStart").innerHTML = ("ALARM! Point Fails to Start\n").replace(/\n/g,'<br />');
                 }
                 else {  //Alert
-                    failsStart.style.color = "orange";
-                    document.getElementById("failsStart").innerHTML += ("Alert: Point Fails to Start\n").replace(/\n/g,'<br />');
+                    document.getElementById("failsStart").style.color = "orange";
+                    document.getElementById("failsStart").innerHTML = ("Alert: Point Fails to Start\n").replace(/\n/g,'<br />');
                 }
             }
             if (currentPMStatus[2] > 1){  //Point Fails to Switch
                 printed = true;
                 if (currentPMStatus[2] == 3){    //Alarm
-                    failsSwitch.style.color = "red";
-                    document.getElementById("failsSwitch").innerHTML += ("ALARM! Point Fails to Switch\n").replace(/\n/g,'<br />');
+                    document.getElementById("failsSwitch").style.color = "red";
+                    document.getElementById("failsSwitch").innerHTML = ("ALARM! Point Fails to Switch\n").replace(/\n/g,'<br />');
                 }
                 else {  //Alert
-                    failsSwitch.style.color = "orange";
-                    document.getElementById("failsSwitch").innerHTML += ("Alert: Point Fails to Switch\n").replace(/\n/g,'<br />');
+                    document.getElementById("failsSwitch").style.color = "orange";
+                    document.getElementById("failsSwitch").innerHTML = ("Alert: Point Fails to Switch\n").replace(/\n/g,'<br />');
                 }
             }
             if (printed == false){  //Normal
                 normal = true;
-                normal.style.color = "green";
-                document.getElementById("normal").innerHTML += ("Normal Operating\n");
+                printed = true;
+                document.getElementById("normal").style.color = "green";
+                document.getElementById("normal").innerHTML = ("Normal Operating\n");
             }
             if (normal == false){   //record detected fault
                 var table = document.getElementById("recordTable");
