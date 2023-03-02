@@ -6,11 +6,6 @@ async function RTupDate(){
     latestPMID = await eel.PMID()();
 }
 
-eel.expose(js_bigger);  //js function to py template
-function js_bigger(count){   
-    return [123, 456, 789]
-}
-
 let normalData, actualData, PMID, myChart, myChart_A, myChart_B, currentPMStatus, currentPMStatus_A, labels, PMID_A //globalize
 labels = new Array(34) 
 labels[0] = 0;
@@ -58,8 +53,8 @@ async function RTupDate_chart_2(){    //for double charts
     let PMID_B = await eel.PMID()();
     PMID = PMID_B;
 
-    var title_A =  PMID_A + ' - ' + await eel.RDate_A()() + ' - ' + await eel.RTime_A()();
-    var title_B =  PMID_B + ' - ' + await eel.RDate()() + ' - ' + await eel.RTime()();
+    var title_A =  PMID_A + ' | ' + await eel.RDate_A()() + ' | ' + await eel.RTime_A()();
+    var title_B =  PMID_B + ' | ' + await eel.RDate()() + ' | ' + await eel.RTime()();
 
     var opNormalData = new Array(34)
     for (let i = 0; i < opNormalData.length ; i++) {
@@ -193,7 +188,7 @@ async function RTupDate_chart(){    //Single graph
     normalData = await eel.normalCurrent()();
     actualData = await eel.actualCurrent()();
     PMID = await eel.PMID()();
-    var title =  PMID + ' - ' + await eel.RDate()() + ' - ' + await eel.RTime()();
+    var title =  PMID + ' | ' + await eel.RDate()() + ' | ' + await eel.RTime()();
 
 
     var opNormalData = new Array(34)

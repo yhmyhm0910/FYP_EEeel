@@ -1,27 +1,54 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <style>
-        .chartBox {
-            width: 80%;
-        }
-    </style>
-    <select id="list" onchange="printthing();analysisChart();">
-        <option value="671A">671A</option>
-        <option value="671B">671B</option>
-        <option value="672">672</option>
-        <option value="673">673</option>
-        <option value="674A">674A</option>
-        <option value="674B">674B</option>
-        <option value="675A">675A</option>
-        <option value="675B">675B</option>        
-        <option value="676">676</option>
-    </select>
-    <select id="toCheck" onchange="printthing();analysisChart();">
-        <option value="Maximum Current">Maximum Current</option>
-        <option value="Steady State Current">Steady State Current</option>
-        <option value="Operating Time">Operating Time</option>
-    </select>
+    <H4>Search By Attribute:</H4>
+    <div class="searchByAttribute">
+        Choose PMID:
+        <select id="AttributePMID">
+            <option>--Please Select--</option>
+            <option value="671A">671A</option>
+            <option value="671B">671B</option>
+            <option value="672">672</option>
+            <option value="673">673</option>
+            <option value="674A">674A</option>
+            <option value="674B">674B</option>
+            <option value="675A">675A</option>
+            <option value="675B">675B</option>        
+            <option value="676">676</option>
+        </select>
+        <br/>
+        Choose Attribute:
+        <select id="toCheck">
+            <option>--Please Select--</option>
+            <option value="Maximum Current">Maximum Current</option>
+            <option value="Steady State Current">Steady State Current</option>
+            <option value="Operating Time">Operating Time</option>
+        </select>
+        <br/><button onclick="analysisChart();document.getElementById('problems').style.display = 'none'">Submit</button>
+    </div>
+    <H4>Search By Records</H4>
+    <div class="searchByRecord">
+        <div>
+            Choose PMID:
+            <select id="RecordPMID">
+                <option>--Please Select--</option>
+                <option value="671A">671A</option>
+                <option value="671B">671B</option>
+                <option value="672">672</option>
+                <option value="673">673</option>
+                <option value="674A">674A</option>
+                <option value="674B">674B</option>
+                <option value="675A">675A</option>
+                <option value="675B">675B</option>        
+                <option value="676">676</option>
+            </select>
+            <button onclick="handleRecordClick()">Continue</button>
+            <div id="currentSelection" class='currentSelection'></div>
+            <br/>
+        </div>
+        <div id="recordShown" style="margin-top: 30px;"></div>
+        <div id="confirmDiv"></div>
+    </div>
     <p id="trial"></p>
     <p id="trial2"></p>
     <p id="trial3"></p>
@@ -32,7 +59,109 @@
     <div id="div" class="chartBox">
         <canvas id="myChart"></canvas>
     </div>
+    <div id="problems" class="problems">
+        <div id="MaxAProblem"></div>
+        <div id="SteadyAProblem"></div>
+        <div id="TimeProblem"></div>
+    </div>
+    
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
     <script src="../js/trend.js"></script>
+    <style>
+    .chartBox {
+    width: 80%;
+    }
+    .searchByAttribute, .searchByRecord {
+        border-style: solid;
+        border-color: gray;
+        padding: 1rem;
+        border-radius: 1rem;
+        margin-bottom: 1rem;
+    }
+    .currentSelection {
+        font:bold; 
+        font: italic;
+        font-size: 1.5rem;
+        display: none;
+        left: 50px;
+        position: relative;
+        border-style: solid;
+        border-color: blue;
+        border-radius: 5px;
+        padding: 3px;
+    }
+
+    .problems {
+        display: none;
+        font-size: 2rem;
+    }
+
+    button {
+    align-items: center;
+    appearance: none;
+    background-color: #fff;
+    border-radius: 24px;
+    border-style: none;
+    box-shadow: rgba(0, 0, 0, .2) 0 3px 5px -1px,rgba(0, 0, 0, .14) 0 6px 10px 0,rgba(0, 0, 0, .12) 0 1px 18px 0;
+    box-sizing: border-box;
+    color: #3c4043;
+    cursor: pointer;
+    display: inline-flex;
+    fill: currentcolor;
+    font-family: "Google Sans",Roboto,Arial,sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    justify-content: center;
+    letter-spacing: .25px;
+    line-height: normal;
+    padding: 10px;
+    overflow: visible;
+    padding: 2px 24px;
+    position: relative;
+    text-align: center;
+    text-transform: none;
+    transition: box-shadow 280ms cubic-bezier(.4, 0, .2, 1),opacity 15ms linear 30ms,transform 270ms cubic-bezier(0, 0, .2, 1) 0ms;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    will-change: transform,opacity;
+    z-index: 0;
+    }
+
+    button:hover {
+    background: #F6F9FE;
+    color: #174ea6;
+    }
+
+    button:active {
+    box-shadow: 0 4px 4px 0 rgb(60 64 67 / 30%), 0 8px 12px 6px rgb(60 64 67 / 15%);
+    outline: none;
+    }
+
+    button:focus {
+    outline: none;
+    border: 2px solid #4285f4;
+    }
+
+    button:not(:disabled) {
+    box-shadow: rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px;
+    }
+
+    button:not(:disabled):hover {
+    box-shadow: rgba(60, 64, 67, .3) 0 2px 3px 0, rgba(60, 64, 67, .15) 0 6px 10px 4px;
+    }
+
+    button:not(:disabled):focus {
+    box-shadow: rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px;
+    }
+
+    button:not(:disabled):active {
+    box-shadow: rgba(60, 64, 67, .3) 0 4px 4px 0, rgba(60, 64, 67, .15) 0 8px 12px 6px;
+    }
+
+    button:disabled {
+    box-shadow: rgba(60, 64, 67, .3) 0 1px 3px 0, rgba(60, 64, 67, .15) 0 4px 8px 3px;
+    }
+    </style>
 {% endblock %}

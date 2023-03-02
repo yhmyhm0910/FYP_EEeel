@@ -23,6 +23,22 @@ conn = pyodbc.connect(
 global cursor
 cursor = conn.cursor()
 
+def RTimeAddColon(finalRTime):
+    for i in range(len(finalRTime)):    #for average use from db (multiple records)
+        if (len(finalRTime[i]) == 1):
+            finalRTime[i] = ''.join(['000'] + [finalRTime[i]])
+        if (len(finalRTime[i]) == 2):
+            finalRTime[i] = ''.join(['00'] + [finalRTime[i]])
+        if (len(finalRTime[i]) == 3):
+            finalRTime[i] = ''.join(['0'] + [finalRTime[i]])
+        finalRTime[i] = finalRTime[i][0] + finalRTime[i][1] + ':' + finalRTime[i][2] + finalRTime[i][3]
+    return finalRTime
+
+def RDateAddHyphen(finalRDate):
+    for i in range(len(finalRDate)):
+        finalRDate[i] = finalRDate[i][0] + finalRDate[i][1] + finalRDate[i][2] + finalRDate[i][3] + '-' + finalRDate[i][4] + finalRDate[i][5] + '-' + finalRDate[i][6] + finalRDate[i][7]   #yyyy-mm-dd
+    return finalRDate
+
 @eel.expose 
 def normalCurrent():
     cursor.execute("SELECT TOP 1 Data1, Data2, Data3, Data4, Data5, Data6, Data7, Data8, Data9, Data10,Data11, Data12, Data13, Data14, Data15, Data16, Data17, Data18, Data19, Data20, Data21, Data22, Data23, Data24,Data25, Data26, Data27, Data28, Data29, Data30, Data31, Data32, Data33, Data34 FROM Records ORDER BY (str(RDate) + str(RTime)) ASC;")
@@ -31,8 +47,6 @@ def normalCurrent():
     finalResult = re.findall('\d*\.?\d+',initialResult)
     for i in range(len(finalResult)):
         finalResult[i] = float(finalResult[i])
-      
-    #eel.js_bigger(f'{1}rem')    #js function to py template
     
     return (finalResult)
 
@@ -63,6 +77,7 @@ def RTime():
     initialRTime = str(cursor.fetchall())
     finalRTime = [0]
     finalRTime = re.findall(r'\d+',initialRTime)
+    RTimeAddColon(finalRTime)
     return str(finalRTime[0])
 
 @eel.expose
@@ -71,6 +86,7 @@ def RTime_A():  #When passed TWO PMs, select the RTime of A
     initialRTime = str(cursor.fetchall())
     finalRTime = [0]
     finalRTime = re.findall(r'\d+',initialRTime)
+    RTimeAddColon(finalRTime)
     return str(finalRTime[0])
 
 @eel.expose
@@ -79,6 +95,7 @@ def RDate():
     initialRDate = str(cursor.fetchall())
     finalRDate = [0]
     finalRDate = re.findall(r'\d+',initialRDate)
+    RDateAddHyphen(finalRDate)
     return str(finalRDate[0])
 
 @eel.expose
@@ -87,6 +104,7 @@ def RDate_A():    #When passed TWO PMs, select the RDate of A
     initialRDate = str(cursor.fetchall())
     finalRDate = [0]
     finalRDate = re.findall(r'\d+',initialRDate)
+    RDateAddHyphen(finalRDate)
     return str(finalRDate[0])
 
 @eel.expose
@@ -213,7 +231,6 @@ def diagnosticUnit():       # return 3 = ALARM; return 2 = ALERT; return 1 = NOR
     # return 3 = ALARM; return 2 = ALERT; return 1 = NORMAL
     return opStatus
 
-print(diagnosticUnit())
 
 #----------------------trendAnalysis-----------------------------------------------------------------------------------------------
 
@@ -221,7 +238,7 @@ print(diagnosticUnit())
 def returnAvgMaxA():
     query = """SELECT TOP 10 Data2, Data3 FROM Records WHERE PMID='{PMID}' ORDER BY (str(RDate) + str(RTime)) DESC;"""
     cursor.execute(query.format(
-        PMID=eel.showValue()()
+        PMID=eel.returnAttPMID()()
     ))
     initialMaxA = str(cursor.fetchall())
     finalMaxA = ['0'] * 20
@@ -245,7 +262,7 @@ def returnAvgMaxA():
 def returnSteadyA():
     query = """SELECT TOP 10 Data11, Data12, Data13, Data14, Data15 FROM Records WHERE PMID='{PMID}' ORDER BY (str(RDate) + str(RTime)) DESC;"""
     cursor.execute(query.format(
-        PMID=eel.showValue()()
+        PMID=eel.returnAttPMID()()
     ))
     initialSteadyA = str(cursor.fetchall())
     finalSteadyA = ['0'] * 150
@@ -269,7 +286,7 @@ def returnSteadyA():
 def returnTime():
     query = """SELECT TOP 10 RDate, RTime FROM Records WHERE PMID='{PMID}' ORDER BY (str(RDate) + str(RTime)) DESC;"""
     cursor.execute(query.format(
-    PMID=eel.showValue()()
+    PMID=eel.returnAttPMID()()
     ))
     initialTime = str(cursor.fetchall())
     finalTime = ['0'] * 20
@@ -289,7 +306,7 @@ def returnTime():
 def returnDuration():
     query = """SELECT TOP 10 Data1, Data2, Data3, Data4, Data5, Data6, Data7, Data8, Data9, Data10, Data11, Data12, Data13, Data14, Data15, Data16, Data17, Data18, Data19, Data20, Data21, Data22, Data23, Data24, Data25, Data26, Data27, Data28, Data29, Data30, Data31, Data32, Data33, Data34 FROM Records WHERE PMID='{PMID}' ORDER BY (str(RDate) + str(RTime)) DESC;"""
     cursor.execute(query.format(
-        PMID=eel.showValue()()
+        PMID=eel.returnAttPMID()()
     ))
     initialDuration = str(cursor.fetchall())
     finalDuration = ['0'] * 340
@@ -314,7 +331,56 @@ def returnDuration():
 
     return opDuration
 
-        
+@eel.expose
+def returnRDate():
+    query = """SELECT RDate FROM Records WHERE PMID='{PMID}' ORDER BY (str(RDate) + str(RTime)) DESC;"""
+    cursor.execute(query.format(
+        PMID=eel.returnRecordPMID()()
+    ))
+    initialRDate = str(cursor.fetchall())
+    finalRDate = ['0'] * 340
+    finalRDate = re.findall('\d*\.?\d+',initialRDate)
+    RDateAddHyphen(finalRDate)
+    return finalRDate
+
+@eel.expose
+def returnRTime():
+    query = """SELECT RTime FROM Records WHERE PMID='{PMID}' ORDER BY (str(RDate) + str(RTime)) DESC;"""
+    cursor.execute(query.format(
+        PMID=eel.returnRecordPMID()()
+    ))
+    initialRTime = str(cursor.fetchall())
+    finalRTime = ['0'] * 340
+    finalRTime = re.findall('\d*\.?\d+',initialRTime)
+
+    RTimeAddColon(finalRTime)
+    return finalRTime
+
+@eel.expose
+def returnRecordGraph():
+    input = str(eel.returnValuefromUser()())
+    toRDateAndRTime = re.sub(r'[^0-9]', '', input)
+    toRDate = toRDateAndRTime[0]    #back to yyyymmdd
+    for i in range(7):
+        toRDate = toRDate + toRDateAndRTime[i+1]
+    toRTime = toRDateAndRTime[8]    #back to hhmm
+    for i in range(3):
+        toRTime = toRTime + toRDateAndRTime[i+9]
+    toPMID = eel.returnRecordPMID()()
+    query = """SELECT Data1, Data2, Data3, Data4, Data5, Data6, Data7, Data8, Data9, Data10, Data11, Data12, Data13, Data14, Data15, Data16, Data17, Data18, Data19, Data20, Data21, Data22, Data23, Data24, Data25, Data26, Data27, Data28, Data29, Data30, Data31, Data32, Data33, Data34 FROM Records WHERE PMID='{toPMID}' AND RDate={toRDate}  AND RTime={toRTime}"""
+    cursor.execute(query.format(
+        toPMID = eel.returnRecordPMID()(),
+        toRDate = toRDate,
+        toRTime = toRTime
+    ))
+    initialReturnData = str(cursor.fetchall())
+    finalReturnData = ['0'] * 34
+    finalReturnData = re.findall('\d*\.?\d+',initialReturnData)
+    for i in range(len(finalReturnData)):
+        finalReturnData[i] = float(finalReturnData[i])
+    toRTime = toRTime[0] + toRTime[1] + ':' + toRTime[2] + toRTime[3]
+    toRDate = toRDate[0] + toRDate[1] + toRDate[2] + toRDate[3] + '-' + toRDate[4] + toRDate[5] + '-' + toRDate[6] + toRDate[7]
+    return [toPMID, toRDate, toRTime, finalReturnData]
 
 
 eel.init('web')
