@@ -384,5 +384,5 @@ def returnRecordGraph():
 
 
 eel.init('web')
-eel.start('templates/main.html', jinja_templates='templates',   #https://stackoverflow.com/questions/66410660/how-to-use-jinja2-template-in-eel-python
+eel.start('templates/realTime.html', jinja_templates='templates',   #https://stackoverflow.com/questions/66410660/how-to-use-jinja2-template-in-eel-python
     size = (600,400))
