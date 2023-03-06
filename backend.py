@@ -4,7 +4,7 @@ import re   #extract decimals from list
 import pyodbc   #database usage
 
 file = open('confidential.txt', 'r')    #database security
-secret = file.readlines()
+secret = file.readlines()   
 
 server = secret[0].strip()  #Database connection is putted here as pages need to use conn (it is global here)
 database = secret[1].strip()

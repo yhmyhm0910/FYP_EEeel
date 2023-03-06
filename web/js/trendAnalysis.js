@@ -124,9 +124,9 @@ async function showRecordProblem(){
         }
 
     document.getElementById('problems').style.display = 'block'
-    document.getElementById('MaxAProblem').innerHTML = `${outputProblem[0]} Maximum Current`
-    document.getElementById('SteadyAProblem').innerHTML = `${outputProblem[1]} Steady Current`    
-    document.getElementById('TimeProblem').innerHTML = `${outputProblem[2]} Duration of Operation`        
+    document.getElementById('MaxAProblem').innerHTML = `${outputProblem[0]} Maximum Current: ${problemData_Max}A`
+    document.getElementById('SteadyAProblem').innerHTML = `${outputProblem[1]} Steady Current: ${problemData_Average}A`    
+    document.getElementById('TimeProblem').innerHTML = `${outputProblem[2]} Duration of Operation: ${problemData_Time}s`        
 }
 
 let recordChart, anaChart //define for conditional
