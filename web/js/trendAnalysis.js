@@ -39,6 +39,7 @@ async function handleRecordClick() {    //After choosing PMID
         confirmBtnAppeared = true
     }
     confirmBtn.onclick = function() {
+        //document.getElementById('recordShown').innerHTML = 'Cleared'    //Never appear cleared, will replace by new record
         showRecordChart()
         showRecordProblem()
     }
@@ -226,8 +227,9 @@ async function analysisChart(){
 
     var labels = new Array(10)
     labels.fill(0, 0, 10)    //Fill array with 0
+
     for (let i = 0; i < labels.length; i++) {
-        labels[i] = String(recordDate[labels.length - i - 1]) + '.' + String(recordTime[labels.length - i - 1]);
+        labels[i] = String(recordDate[labels.length - i - 1]) + ' | ' + String(recordTime[labels.length - i - 1]);
     }
 
     var opDuration = await eel.returnDuration()();

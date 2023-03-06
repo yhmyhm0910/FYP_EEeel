@@ -294,12 +294,24 @@ def returnTime():
     opDate = ['0'] * 10
     opTime = ['0'] * 10
     for i in range(len(finalTime)):
-        finalTime[i] = float(finalTime[i])
+        finalTime[i] = int(finalTime[i])
         if (i%2) == 1:
-            opTime[int(i/2)]= finalTime[i]
+            opTime[int(i/2)] = finalTime[i]
         else:
-            opDate[int((i/2)-1)]= finalTime[i]
+            opDate[int((i/2)-1)] = finalTime[i]
         output = [opDate, opTime]   # output[0]=opDate, output[1]=opTime
+    print(output)
+    for i in range(10):    #add hyphens and colon and 0 before mins
+        output[0][i] = str(output[0][i])
+        output[1][i] = str(output[1][i])
+        output[0][i] = output[0][i][0] + output[0][i][1] + output[0][i][2] + output[0][i][3] + '-' + output[0][i][4] + output[0][i][5] + '-' + output[0][i][6] + output[0][i][7]    #yyyy-mm-dd
+        if len(output[1][i]) == 1:
+            output[1][i] = '000' + output[1][i]
+        if len(output[1][i]) == 2:
+            output[1][i] = '00' + output[1][i]
+        if len(output[1][i]) == 3:
+            output[1][i] = '0' + output[1][i]
+        output[1][i] = output[1][i][0] + output[1][i][1] + ':' + output[1][i][2] + output[1][i][3] #hh:mm   
     return output
 
 @eel.expose
