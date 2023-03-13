@@ -3,9 +3,20 @@
 {% block content %}
 <style>
     .chartBox {
-        width: 60%;
+        width: 750px;
     }
-
+    .chartBox_one {
+        width: 900px;
+    }
+    .twoCharts {
+        display: flex;
+    }
+    .faults {
+        width: 750px;
+    }
+    .allFaults {
+        display: flex;
+    }
     table {
         font-family: arial, sans-serif;
         border-collapse: collapse;
@@ -16,16 +27,17 @@
         clear: both;
         display: table;
     }
-    .row {
-        margin-left:-5px;
-        margin-right:-5px;
+    .allTables {
+        display: flex;
     }
-    .column {
-        float: left;
-        width: 40%;
-        padding: 5px;
+    .table {
+        margin-right: 10px;
+        padding: 1px;
     }
-    td, th {
+    .table td, .table th{
+        padding: 1px;
+    }
+    td, th{
         border: 1px solid #dddddd;
         text-align: left;
         padding: 1px;
@@ -40,9 +52,9 @@
 </style>
 
 <body style="right: 3px">
-<div class="row">
-    <div class="column">
-        <table id="table1" style="width: 100%">
+<div class="allTables">
+    <div class="table">
+        <table id="table1">
         <tr>
             <th>Latest Operation</th>
             <th>Status</th>
@@ -69,8 +81,8 @@
         </tr>
         </table>
     </div>
-    <div class="column">
-        <table id="table2" style="width: 100%">
+    <div class="table">
+        <table id="table2">
             <tr>
             <th>Latest Operation</th>
             <th>Status</th>
@@ -100,23 +112,27 @@
 </div>
 
 <H5 id="PMID"></H5>
-<div style="width: 50%; float:left">
-    <H3 id="faultPresent"><span id="stickyChair"></span><span id="encountersObstruction"></span><span id="failsLock"></span><span id="failsStart"></span><span id="failsSwitch"></span><span id="normal"></span></H3>
-</div>
-<div style="margin-left: 50%;">
-    <H3 id="faultPresent_2"><span id="stickyChair_2"></span><span id="encountersObstruction_2"></span><span id="failsLock_2"></span><span id="failsStart_2"></span><span id="failsSwitch_2"></span><span id="normal_2"></span></H3>
+<div class="allFaults">
+    <div class="faults">
+        <H3 id="faultPresent"><span id="stickyChair"></span><span id="encountersObstruction"></span><span id="failsLock"></span><span id="failsStart"></span><span id="failsSwitch"></span><span id="normal"></span></H3>
+    </div>
+    <div class="faults">
+        <H3 id="faultPresent_2"><span id="stickyChair_2"></span><span id="encountersObstruction_2"></span><span id="failsLock_2"></span><span id="failsStart_2"></span><span id="failsSwitch_2"></span><span id="normal_2"></span></H3>
+    </div>
 </div>
 
-
-<div id="div" class="chartBox">
+<div id="div" class="chartBox_one">
     <canvas id="myChart"></canvas>
 </div>
-<div id="div1" class="chartBox" style="width: 50%; height: 100%; float: left;">
-    <canvas id="myChart_A"></canvas>
+<div class="twoCharts">
+    <div id="div1" class="chartBox">
+        <canvas id="myChart_A"></canvas>
+    </div>
+    <div id="div2" class="chartBox">
+        <canvas id="myChart_B"></canvas>
+    </div>
 </div>
-<div id="div2" class="chartBox" style="margin-left: 50%; width: 50%; height: 100%;">
-    <canvas id="myChart_B"></canvas>
-</div>
+
 <script type="text/javascript" src="../js/realTime.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
 

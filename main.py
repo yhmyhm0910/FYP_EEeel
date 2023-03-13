@@ -23,6 +23,7 @@ conn = pyodbc.connect(
 global cursor
 cursor = conn.cursor()
 
+#-------------------------function to make correct format-------------------------------------------------------------------------------
 def RTimeAddColon(finalRTime):
     for i in range(len(finalRTime)):    #for average use from db (multiple records)
         if (len(finalRTime[i]) == 1):
@@ -38,6 +39,7 @@ def RDateAddHyphen(finalRDate):
     for i in range(len(finalRDate)):
         finalRDate[i] = finalRDate[i][0] + finalRDate[i][1] + finalRDate[i][2] + finalRDate[i][3] + '-' + finalRDate[i][4] + finalRDate[i][5] + '-' + finalRDate[i][6] + finalRDate[i][7]   #yyyy-mm-dd
     return finalRDate
+#---------------------------------------------------------------------------------------------------------------------------------------
 
 @eel.expose 
 def normalCurrent():
@@ -153,14 +155,14 @@ def diagnosticUnit():       # return 3 = ALARM; return 2 = ALERT; return 1 = NOR
         else: return 1
 
     def fetchSteadyCurrent():
-        cursor.execute("SELECT TOP 1 Data11, Data12, Data13, Data14, Data15 FROM Records ORDER BY (str(RDate) + str(RTime)) DESC;") 
+        cursor.execute("SELECT TOP 1 Data11, Data12, Data13, Data14, Data15, Data16 FROM Records ORDER BY (str(RDate) + str(RTime)) DESC;") 
         initialSteadyCurrent = str(cursor.fetchall())
-        finalSteadyCurrent = ['0'] * 5
+        finalSteadyCurrent = ['0'] * 6
         finalSteadyCurrent = re.findall('\d*\.?\d+',initialSteadyCurrent)
         for i in range(len(finalSteadyCurrent)):
             finalSteadyCurrent[i] = float(finalSteadyCurrent[i])
 
-        meanSteadyCurrent = (finalSteadyCurrent[0] + finalSteadyCurrent[1] + finalSteadyCurrent[2] + finalSteadyCurrent[3] + finalSteadyCurrent[4])/5
+        meanSteadyCurrent = (finalSteadyCurrent[0] + finalSteadyCurrent[1] + finalSteadyCurrent[2] + finalSteadyCurrent[3] + finalSteadyCurrent[4] + + finalSteadyCurrent[5]) /6
 
         if meanSteadyCurrent >= 6:
             finalStatus = 3
@@ -172,14 +174,14 @@ def diagnosticUnit():       # return 3 = ALARM; return 2 = ALERT; return 1 = NOR
         return finalStatus
 
     def fetchSteadyCurrent_A():
-        cursor.execute("SELECT TOP 1 Data11, Data12, Data13, Data14, Data15 FROM Records WHERE PMID LIKE '%A' ORDER BY (str(RDate) + str(RTime)) DESC;")  
+        cursor.execute("SELECT TOP 1 Data11, Data12, Data13, Data14, Data15, Data16 FROM Records WHERE PMID LIKE '%A' ORDER BY (str(RDate) + str(RTime)) DESC;")  
         initialSteadyCurrent = str(cursor.fetchall())
-        finalSteadyCurrent = ['0'] * 5
+        finalSteadyCurrent = ['0'] * 6
         finalSteadyCurrent = re.findall('\d*\.?\d+',initialSteadyCurrent)
         for i in range(len(finalSteadyCurrent)):
             finalSteadyCurrent[i] = float(finalSteadyCurrent[i])
 
-        meanSteadyCurrent = (finalSteadyCurrent[0] + finalSteadyCurrent[1] + finalSteadyCurrent[2] + finalSteadyCurrent[3] + finalSteadyCurrent[4])/5
+        meanSteadyCurrent = (finalSteadyCurrent[0] + finalSteadyCurrent[1] + finalSteadyCurrent[2] + finalSteadyCurrent[3] + finalSteadyCurrent[4] + + finalSteadyCurrent[5]) /6
 
         if meanSteadyCurrent >= 6:
             finalStatus = 3

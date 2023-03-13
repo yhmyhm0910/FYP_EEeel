@@ -13,11 +13,13 @@ function returnRecordPMID() {    //Search by Record PMID
 let returnValue
 let confirmBtnAppeared = false
 async function handleRecordClick() {    //After choosing PMID
+    document.getElementById('recordShown').innerHTML = 'Loading...'     //show loading when fetching data from SQL
     const returnRDate = await eel.returnRDate()()
     const returnRTime = await eel.returnRTime()()
     let combinedRDateRTime = new Array()
     document.getElementById('currentSelection').innerHTML = 'Current Selection: --None--'
     document.getElementById('currentSelection').style.display = 'inline-block'
+    document.getElementById('recordShown').innerHTML = ''
     for (let i=0; i < returnRDate.length; i++){
         combinedRDateRTime[i] = returnRDate[i] + ' | ' + returnRTime[i]
         let newBtn = document.createElement('button');
@@ -39,7 +41,6 @@ async function handleRecordClick() {    //After choosing PMID
         confirmBtnAppeared = true
     }
     confirmBtn.onclick = function() {
-        //document.getElementById('recordShown').innerHTML = 'Cleared'    //Never appear cleared, will replace by new record
         showRecordChart()
         showRecordProblem()
     }
@@ -64,8 +65,8 @@ Duration[9] = 0.45;
 Duration[10] = 0.8;
 Duration[11] = 1.0;
 Duration[12] = 1.5;
-Duration[13] = 2.1;
-Duration[14] = 2.4;
+Duration[13] = 2.0;
+Duration[14] = 3.0;
 Duration[15] = 4.2;
 Duration[16] = 4.4;
 Duration[17] = 4.6;
@@ -82,14 +83,14 @@ Duration[27] = 7.0;
 Duration[28] = 8.0;
 Duration[29] = 9.0;
 Duration[30] = 10.0;
-Duration[31] = 11.9;
+Duration[31] = 11.0;
 Duration[32] = 12.0;
 Duration[33] = 12.1;
 
 async function showRecordProblem(){
     const problemData = await eel.returnRecordGraph()()
     const problemData_Max = (problemData[3][1] + problemData[3][2]) /2
-    const problemData_Average = (problemData[3][10] + problemData[3][11] + problemData[3][12] + problemData[3][13] + problemData[3][14]) /5
+    const problemData_Average = (problemData[3][10] + problemData[3][11] + problemData[3][12] + problemData[3][13] + problemData[3][14] + problemData[3][15]) /6
     let problemData_Time
     for (i=0; i<(problemData[3].length); i++){
         if (problemData[3][i] === 0){

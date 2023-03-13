@@ -1,10 +1,17 @@
-let shownData, latestPMID
+let latestPMID, latestCHECK, STOREDDATETIME
 
 setInterval(RTupDate, 1000);    // 1s run say_something one time
 async function RTupDate(){
-    shownData = await eel.actualCurrent()();
     latestPMID = await eel.PMID()();
+    latestCHECK = await eel.RDate()() + await eel.RTime()();
+    console.log(latestCHECK)
+    console.log(STOREDDATETIME)
 }
+
+async function storeddatetime(){
+    STOREDDATETIME = latestCHECK
+}
+storeddatetime()     //only act once
 
 let normalData, actualData, PMID, myChart, myChart_A, myChart_B, currentPMStatus, currentPMStatus_A, labels, PMID_A //globalize
 labels = new Array(34) 
@@ -21,8 +28,8 @@ labels[9] = 0.45;
 labels[10] = 0.8;
 labels[11] = 1.0;
 labels[12] = 1.5;
-labels[13] = 2.1;
-labels[14] = 2.4;
+labels[13] = 2.0;
+labels[14] = 3.0;
 labels[15] = 4.2;
 labels[16] = 4.4;
 labels[17] = 4.6;
@@ -282,8 +289,8 @@ async function changeChart(){
         document.getElementById("normal_2").innerHTML = ''; 
     }
 
-    if (JSON.stringify(PMID) != JSON.stringify(latestPMID)){  //after JSON.stingify they will be the same
-        PMID = await eel.PMID()();  //for sync
+    if (JSON.stringify(STOREDDATETIME) != JSON.stringify(latestCHECK)){  //after JSON.stingify they will be the same
+        STOREDDATETIME = latestCHECK;  //for sync
 
         PMID = latestPMID;  //for sync
         if (latestPMID.includes('A')) {     //if two graphs
@@ -336,13 +343,13 @@ async function changeChart(){
                                     latestOperationB_2.style.color = "red";
                                     document.getElementById("latestOperationB_2").innerHTML = "Alarm - exceeds";
                                     latestSteadyA_2.style.color = "red";
-                                    document.getElementById("latestSteadyA_2").innerHTML = (latestData[10] + latestData[11] + latestData[12] + latestData[13] + latestData[14])/5 + 'A';
+                                    document.getElementById("latestSteadyA_2").innerHTML = ((latestData[10] + latestData[11] + latestData[12] + latestData[13] + latestData[14] + latestData_A[15])/6).toFixed(3) + 'A';
                                     break;
                                 case 3:     //SteadyA
                                     latestOperationB.style.color = "red";
                                     document.getElementById("latestOperationB").innerHTML = "Alarm - exceeds";
                                     latestSteadyA.style.color = "red";
-                                    document.getElementById("latestSteadyA").innerHTML = (latestData_A[10] + latestData_A[11] + latestData_A[12] + latestData_A[13] + latestData_A[14])/5 + 'A';
+                                    document.getElementById("latestSteadyA").innerHTML = ((latestData_A[10] + latestData_A[11] + latestData_A[12] + latestData_A[13] + latestData_A[14] + latestData_A[15])/6).toFixed(3) + 'A';
                                     break;
                                 case 4:     //DurationB
                                     latestOperationC_2.style.color = "red";
@@ -390,13 +397,13 @@ async function changeChart(){
                                     latestOperationB_2.style.color = "orange";
                                     document.getElementById("latestOperationB_2").innerHTML = "Alert - exceeds";
                                     latestSteadyA_2.style.color = "orange";
-                                    document.getElementById("latestSteadyA_2").innerHTML = (latestData[10] + latestData[11] + latestData[12] + latestData[13] + latestData[14])/5 + 'A';
+                                    document.getElementById("latestSteadyA_2").innerHTML = ((latestData[10] + latestData[11] + latestData[12] + latestData[13] + latestData[14] + latestData[15]) /6).toFixed(3) + 'A';
                                     break;
                                 case 3:     //SteadyA
                                     latestOperationB.style.color = "orange";
                                     document.getElementById("latestOperationB").innerHTML = "Alert - exceeds";
                                     latestSteadyA.style.color = "orange";
-                                    document.getElementById("latestSteadyA").innerHTML = (latestData_A[10] + latestData_A[11] + latestData_A[12] + latestData_A[13] + latestData_A[14])/5 + 'A';
+                                    document.getElementById("latestSteadyA").innerHTML = ((latestData_A[10] + latestData_A[11] + latestData_A[12] + latestData_A[13] + latestData_A[14] + latestData[15]) /6).toFixed(3) + 'A';
                                     break;
                                 case 4:     //DurationB
                                     latestOperationC_2.style.color = "orange";
@@ -444,13 +451,13 @@ async function changeChart(){
                                     latestOperationB_2.style.color = "green";
                                     document.getElementById("latestOperationB_2").innerHTML = "Normal Steady Current";
                                     latestSteadyA_2.style.color = "green";
-                                    document.getElementById("latestSteadyA_2").innerHTML = (latestData[10] + latestData[11] + latestData[12] + latestData[13] + latestData[14])/5 + 'A';
+                                    document.getElementById("latestSteadyA_2").innerHTML = ((latestData[10] + latestData[11] + latestData[12] + latestData[13] + latestData[14]+ latestData[15]) /6).toFixed(3) + 'A';
                                     break;
                                 case 3:     //SteadyA
                                     latestOperationB.style.color = "green";
                                     document.getElementById("latestOperationB").innerHTML = "Normal Steady Current";
                                     latestSteadyA.style.color = "green";
-                                    document.getElementById("latestSteadyA").innerHTML = (latestData_A[10] + latestData_A[11] + latestData_A[12] + latestData_A[13] + latestData_A[14])/5 + 'A';
+                                    document.getElementById("latestSteadyA").innerHTML =( (latestData_A[10] + latestData_A[11] + latestData_A[12] + latestData_A[13] + latestData_A[14]+ latestData[15]) /6).toFixed(3) + 'A';
                                     break;
                                 case 4:
                                     latestOperationC_2.style.color = "green";
@@ -482,7 +489,6 @@ async function changeChart(){
                         }   //end of normal
                     }   //end of for loop (check status)
                     let PMID_A = await eel.PMID_A()()
-                    document.getElementById("PMID").innerHTML = `Possible Faults of ${PMID_A} and ${PMID}:`;
                     let printed_A = false;
                     normal_A = false;
                     if (currentPMStatus[1] > 1 && currentPMStatus[3] > 1){  //point with sticky chair (PM_A)
@@ -507,7 +513,7 @@ async function changeChart(){
                             document.getElementById("encountersObstruction").innerHTML = (`[${PMID_A}] Alert: Point Encounters Obstruction\n`).replace(/\n/g,'<br />');
                         }
                     }
-                    if (currentPMStatus[3] == 1 && currentPMStatus[5] > 1){  //print fails to lock (PM_A)
+                    if (currentPMStatus[5] > 1){  //print fails to lock (PM_A)
                         printed_A = true;
                         if (currentPMStatus[5] == 3){    //Alarm
                             document.getElementById("failsLock").style.color = "red";
@@ -578,7 +584,7 @@ async function changeChart(){
                             document.getElementById("encountersObstruction_2").innerHTML = (`[${PMID}] Alert: Point Encounters Obstruction\n`).replace(/\n/g,'<br />');
                         }
                     }
-                    if (currentPMStatus[2] == 1 && currentPMStatus[4] > 1){  //point fails to lock
+                    if (currentPMStatus[4] > 1){  //point fails to lock
                         printed_B = true;
                         if (currentPMStatus[4] == 3){    //Alarm
                             document.getElementById("failsLock_2").style.color = "red";
@@ -625,6 +631,7 @@ async function changeChart(){
                         cell1.innerHTML = await eel.PMID()() + ' - ' + await eel.RDate()() + ' - ' + await eel.RTime()();;
                         cell2.innerHTML = document.getElementById("faultPresent_2").innerHTML;
                     }
+                    document.getElementById("PMID").innerHTML = `Possible Faults of ${PMID_A} and ${PMID}:`;
                 }   //end of if (latestPMID.includes('B'))
             }   //end of wait b
         }   // end of if (latestPMID.includes('A')) 
@@ -640,13 +647,13 @@ async function changeChart(){
             currentPMStatus = await eel.diagnosticUnit()();     
             var latestData = await eel.actualCurrent()();
             
-            var noTable = document.getElementById("table2");
+            const noTable = document.getElementById("table2");
             noTable.style.visibility = "hidden";
-            var noDiv1 = document.getElementById("div1");
+            const noDiv1 = document.getElementById("div1");
             noDiv1.style.display = "none";
-            var noDiv2 = document.getElementById("div2");
+            const noDiv2 = document.getElementById("div2");
             noDiv2.style.display = "none";
-            var showDiv = document.getElementById("div");
+            const showDiv = document.getElementById("div");
             showDiv.style.display = "block";
             cleartext();
 
@@ -663,7 +670,7 @@ async function changeChart(){
                             latestOperationB.style.color = "red";
                             document.getElementById("latestOperationB").innerHTML = "Alarm - exceeds";
                             latestSteadyA.style.color = "red";
-                            document.getElementById("latestSteadyA").innerHTML = (latestData[10] + latestData[11] + latestData[12] + latestData[13] + latestData[14])/5 + 'A';
+                            document.getElementById("latestSteadyA").innerHTML = ((latestData[10] + latestData[11] + latestData[12] + latestData[13] + latestData[14]+ latestData[15]) /6).toFixed(3) + 'A';
                             break;
                         case 4:
                             latestOperationC.style.color = "red";
@@ -692,7 +699,7 @@ async function changeChart(){
                             latestOperationB.style.color = "orange";
                             document.getElementById("latestOperationB").innerHTML = "Alert - exceeds";
                             latestSteadyA.style.color = "orange";
-                            document.getElementById("latestSteadyA").innerHTML = (latestData[10] + latestData[11] + latestData[12] + latestData[13] + latestData[14])/5 + 'A';
+                            document.getElementById("latestSteadyA").innerHTML = ((latestData[10] + latestData[11] + latestData[12] + latestData[13] + latestData[14]+ latestData[15]) /6).toFixed(3) + 'A';
                             break;
                         case 4:
                             latestOperationC.style.color = "orange";
@@ -721,7 +728,7 @@ async function changeChart(){
                             latestOperationB.style.color = "green";
                             document.getElementById("latestOperationB").innerHTML = "Normal Steady Current";
                             latestSteadyA.style.color = "green";
-                            document.getElementById("latestSteadyA").innerHTML = (latestData[10] + latestData[11] + latestData[12] + latestData[13] + latestData[14])/5 + 'A';
+                            document.getElementById("latestSteadyA").innerHTML =( (latestData[10] + latestData[11] + latestData[12] + latestData[13] + latestData[14]+ latestData[15]) /6).toFixed(3) + 'A';
                             break;
                         case 4:
                             latestOperationC.style.color = "green";
