@@ -135,8 +135,8 @@ def diagnosticUnit():       # return 3 = ALARM; return 2 = ALERT; return 1 = NOR
         finalMaxCurrent = re.findall('\d*\.?\d+',initialMaxCurrent)
         for i in range(len(finalMaxCurrent)):
             finalMaxCurrent[i] = float(finalMaxCurrent[i])
-        if (finalMaxCurrent[0] >= 12) | (finalMaxCurrent[1] >= 12) :
-            if (finalMaxCurrent[0] >= 16) | (finalMaxCurrent[1] >= 16) :
+        if ((finalMaxCurrent[0] + finalMaxCurrent[1])/2 >= 12) :
+            if ((finalMaxCurrent[0] + finalMaxCurrent[1])/2 >= 16) :
                 return 3
             else: return 2
         else: return 1
@@ -148,8 +148,8 @@ def diagnosticUnit():       # return 3 = ALARM; return 2 = ALERT; return 1 = NOR
         finalMaxCurrent = re.findall('\d*\.?\d+',initialMaxCurrent)
         for i in range(len(finalMaxCurrent)):
             finalMaxCurrent[i] = float(finalMaxCurrent[i])
-        if (finalMaxCurrent[0] >= 12) | (finalMaxCurrent[1] >= 12) :
-            if (finalMaxCurrent[0] >= 16) | (finalMaxCurrent[1] >= 16) :
+        if ((finalMaxCurrent[0] + finalMaxCurrent[1])/2 >= 12) :
+            if ((finalMaxCurrent[0] + finalMaxCurrent[1])/2 >= 16) :
                 return 3
             else: return 2
         else: return 1
