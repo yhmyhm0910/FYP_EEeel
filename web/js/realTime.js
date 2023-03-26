@@ -292,7 +292,7 @@ async function changeChart(){
     if (JSON.stringify(STOREDDATETIME) != JSON.stringify(latestCHECK)){  //after JSON.stingify they will be the same
         STOREDDATETIME = latestCHECK;  //for sync
 
-        PMID = latestPMID;  //for sync
+        PMID = await eel.PMID()();  //for sync
         if (latestPMID.includes('A')) {     //if two graphs
             console.log('Found A');
             clearInterval(myInterval);
