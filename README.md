@@ -49,10 +49,3 @@ Start the server
 ```bash
   python3 main.py
 ```
-
-Start the server
-
-```bash
-  npm run start
-```
-
